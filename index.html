@@ -3862,7 +3862,34 @@ function ebookUrl(id){
 ========================================================= */
 
 function goHome(){
+    document.title =
+        "RP Ebook Store | Premium Hindi eBooks & Books Online";
 
+    const descriptionMeta =
+        document.querySelector(
+            'meta[name="description"]'
+        );
+
+    if(descriptionMeta){
+
+        descriptionMeta.setAttribute(
+            "content",
+            "RP Ebook Store पर पढ़ें और खरीदें premium Hindi eBooks, motivational books, educational books, self-help books और प्रतियोगी परीक्षा से जुड़ी उपयोगी किताबें।"
+        );
+
+    }
+
+    const canonical =
+        document.querySelector(
+            'link[rel="canonical"]'
+        );
+
+    if(canonical){
+
+        canonical.href =
+            "https://rpebookstore.github.io/RPEbookStore/";
+
+    }
     const url =
         new URL(
             window.location.href
@@ -4133,7 +4160,68 @@ function showDetail(book){
         document.getElementById(
             "detailContent"
         );
+    /* =====================================================
+       DYNAMIC EBOOK SEO
+    ===================================================== */
 
+    const seoTitle =
+        book.Title
+            ? book.Title + " | RP Ebook Store"
+            : "RP Ebook Store | Premium Hindi eBooks";
+
+    const seoDescription =
+        book.Description
+            ? String(book.Description).substring(0, 160)
+            : "RP Ebook Store पर premium Hindi eBooks और उपयोगी किताबें पढ़ें और खरीदें।";
+
+    document.title = seoTitle;
+
+    let descriptionMeta =
+        document.querySelector('meta[name="description"]');
+
+    if(!descriptionMeta){
+
+        descriptionMeta =
+            document.createElement("meta");
+
+        descriptionMeta.name =
+            "description";
+
+        document.head.appendChild(
+            descriptionMeta
+        );
+
+    }
+
+    descriptionMeta.setAttribute(
+        "content",
+        seoDescription
+    );
+
+
+    /* =====================================================
+       DYNAMIC CANONICAL URL
+    ===================================================== */
+
+    let canonical =
+        document.querySelector('link[rel="canonical"]');
+
+    if(!canonical){
+
+        canonical =
+            document.createElement("link");
+
+        canonical.rel =
+            "canonical";
+
+        document.head.appendChild(
+            canonical
+        );
+
+    }
+
+    canonical.href =
+        ebookUrl(book.id);
 
     const priceData =
         getPriceHTML(book);
