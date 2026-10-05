@@ -1,12 +1,110 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
   <url>
     <loc>https://rpebookstore.github.io/RPEbookStore/</loc>
   </url>
 
+
   <url>
-    <loc>https://rpebookstore.github.io/RPEbookStore/payment-success.html</loc>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=1</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=2</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=3</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=4</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=5</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=6</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=7</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=8</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=9</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=10</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=11</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=12</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=13</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=14</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=15</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=16</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=17</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=18</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=19</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=21</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=22</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=23</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=24</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=25</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=26</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=27</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=28</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=29</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=30</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=31</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=32</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=33</loc>
+  </url>
+  <url>
+    <loc>https://rpebookstore.github.io/RPEbookStore/?ebook=34</loc>
   </url>
 
 </urlset>
