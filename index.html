@@ -1141,7 +1141,24 @@ section{
 
     flex-wrap:wrap;
 }
+.detail-full-description{
+    margin-top:30px;
+    padding-top:22px;
+    border-top:1px solid #e5eaf0;
+}
 
+.detail-full-description h2{
+    font-size:20px;
+    margin-bottom:12px;
+    color:#1f2937;
+}
+
+.detail-full-description p{
+    color:#5d6978;
+    font-size:14px;
+    line-height:1.8;
+    margin:0;
+}
 .detail-buy{
     background:#f5b521;
 
@@ -4160,6 +4177,7 @@ function showDetail(book){
         document.getElementById(
             "detailContent"
         );
+
     /* =====================================================
        DYNAMIC EBOOK SEO
     ===================================================== */
@@ -4171,13 +4189,15 @@ function showDetail(book){
 
     const seoDescription =
         book.Description
-            ? String(book.Description).substring(0, 160)
+            ? String(book.Description).substring(0,160)
             : "RP Ebook Store पर premium Hindi eBooks और उपयोगी किताबें पढ़ें और खरीदें।";
 
     document.title = seoTitle;
 
     let descriptionMeta =
-        document.querySelector('meta[name="description"]');
+        document.querySelector(
+            'meta[name="description"]'
+        );
 
     if(!descriptionMeta){
 
@@ -4204,7 +4224,9 @@ function showDetail(book){
     ===================================================== */
 
     let canonical =
-        document.querySelector('link[rel="canonical"]');
+        document.querySelector(
+            'link[rel="canonical"]'
+        );
 
     if(!canonical){
 
@@ -4222,6 +4244,7 @@ function showDetail(book){
 
     canonical.href =
         ebookUrl(book.id);
+
 
     const priceData =
         getPriceHTML(book);
@@ -4300,6 +4323,8 @@ function showDetail(book){
             <div class="detail-grid">
 
 
+                <!-- COVER -->
+
                 <div class="detail-cover">
 
                     ${coverHTML}
@@ -4307,22 +4332,25 @@ function showDetail(book){
                 </div>
 
 
+                <!-- RIGHT SIDE -->
+
                 <div class="detail-content">
+
+                    <!-- TITLE -->
 
                     <h1>
                         ${title}
                     </h1>
 
 
+                    <!-- CATEGORY -->
+
                     <span class="detail-category">
                         ${category}
                     </span>
 
 
-                    <p class="detail-description">
-                        ${description}
-                    </p>
-
+                    <!-- PRICE -->
 
                     <div class="detail-price">
 
@@ -4331,38 +4359,47 @@ function showDetail(book){
                     </div>
 
 
+                    <!-- ACTIONS -->
+
                     <div class="detail-actions">
 
-<div class="coupon-box">
 
-    <div class="coupon-title">
-        🎟️ Have a Coupon?
-    </div>
+                        <!-- COUPON -->
 
-    <div class="coupon-row">
+                        <div class="coupon-box">
 
-        <input
-            type="text"
-            id="couponCode"
-            placeholder="Enter Coupon Code"
-            maxlength="50"
-        >
+                            <div class="coupon-title">
+                                🎟️ Have a Coupon?
+                            </div>
 
-        <button
-            type="button"
-           onclick="redeemCoupon('${escapeJs(book.id)}')"
-        >
-            REDEEM
-        </button>
+                            <div class="coupon-row">
 
-    </div>
+                                <input
+                                    type="text"
+                                    id="couponCode"
+                                    placeholder="Enter Coupon Code"
+                                    maxlength="50"
+                                >
 
-    <div
-        id="couponMessage"
-        class="coupon-message"
-    ></div>
+                                <button
+                                    type="button"
+                                    onclick="redeemCoupon('${escapeJs(book.id)}')"
+                                >
+                                    REDEEM
+                                </button>
 
-</div>
+                            </div>
+
+                            <div
+                                id="couponMessage"
+                                class="coupon-message"
+                            ></div>
+
+                        </div>
+
+
+                        <!-- BUY NOW -->
+
                         <button
                             class="detail-buy"
                             onclick="
@@ -4376,12 +4413,15 @@ function showDetail(book){
                                         book.id
                                     )}'
                                 )
-                            ">
+                            "
+                        >
 
                             BUY NOW
 
                         </button>
 
+
+                        <!-- SHARE -->
 
                         <button
                             class="detail-share"
@@ -4391,7 +4431,8 @@ function showDetail(book){
                                         book.id
                                     )}'
                                 )
-                            ">
+                            "
+                        >
 
                             SHARE
 
@@ -4399,6 +4440,22 @@ function showDetail(book){
 
 
                     </div>
+
+
+                    <!-- FULL DESCRIPTION -->
+
+                    <div class="detail-full-description">
+
+                        <h2>
+                            📖 DESCRIPTION
+                        </h2>
+
+                        <p>
+                            ${description}
+                        </p>
+
+                    </div>
+
 
                 </div>
 
@@ -4429,7 +4486,6 @@ function showDetail(book){
     });
 
 }
-
 
 /* =========================================================
    DETAIL ERROR
