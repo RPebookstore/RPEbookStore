@@ -640,19 +640,33 @@ section{
 
 .card{
     background:#fff;
-    border:1px solid #e7ebf0;
-    border-radius:12px;
-    padding:8px;
-    box-shadow:0 4px 14px rgba(0,0,0,.06);
+
+    border:
+        1px solid #e7ebf0;
+
+    border-radius:13px;
+
+    padding:10px;
+
+    box-shadow:
+        0 5px 17px
+        rgba(0,0,0,.06);
+
     overflow:hidden;
+
     transition:.2s;
+
     min-width:0;
 }
 
 .card:hover{
-    transform:translateY(-3px);
-    box-shadow:0 10px 22px rgba(0,0,0,.10);
+    transform:translateY(-4px);
+
+    box-shadow:
+        0 12px 28px
+        rgba(0,0,0,.11);
 }
+
 
 /* =========================================================
    COVER
@@ -776,20 +790,13 @@ section{
 
     line-height:1.45;
 
-    height:32px;
+    min-height:48px;
 
     margin-bottom:8px;
 
-    overflow:hidden;
-
-    display:-webkit-box;
-    -webkit-line-clamp:2;
-    -webkit-box-orient:vertical;
-
-    text-overflow:ellipsis;
-
     overflow-wrap:anywhere;
 }
+
 
 /* =========================================================
    PRICE + BUY NOW
@@ -1004,11 +1011,7 @@ section{
     grid-template-columns:
         330px minmax(0,1fr);
 
-    grid-template-rows:auto auto;
-
-    column-gap:30px;
-
-    row-gap:25px;
+    gap:30px;
 
     align-items:start;
 }
@@ -1096,58 +1099,7 @@ section{
     margin:
         15px 0 20px;
 }
-/* =========================================================
-   DETAIL DESCRIPTION — FULL WIDTH / BOTTOM
-========================================================= */
 
-.detail-description{
-    color:#5d6978;
-
-    font-size:14px;
-
-    line-height:1.75;
-
-    margin:0;
-
-    width:100%;
-
-    max-width:none;
-
-    overflow:visible;
-
-    height:auto;
-}
- /* =========================================================
-   DETAIL DESCRIPTION — BOTTOM FULL WIDTH
-========================================================= */
-
-.detail-description-full{
-    grid-column:1 / -1;
-    width:100%;
-    margin-top:0;
-    padding-top:22px;
-    border-top:1px solid #e7ebf0;
-}
-
-.detail-description-full h3{
-    margin:0 0 12px 0;
-    color:#26384d;
-    font-size:16px;
-    font-weight:800;
-    letter-spacing:.5px;
-}
-
-.detail-description-text{
-    width:100%;
-    color:#5d6978;
-    font-size:14px;
-    line-height:1.75;
-    white-space:normal;
-    overflow:visible;
-    height:auto;
-    max-height:none;
-    overflow-wrap:anywhere;
-}     
 .detail-price{
     display:flex;
 
@@ -2009,23 +1961,14 @@ footer a:hover{
 
     /* DESCRIPTION */
 
-   .card p{
-    font-size:8px;
+    .card p{
+        font-size:8px;
 
-    line-height:1.4;
+        min-height:36px;
 
-    height:23px;
+        line-height:1.4;
+    }
 
-    margin-bottom:6px;
-
-    overflow:hidden;
-
-    display:-webkit-box;
-    -webkit-line-clamp:2;
-    -webkit-box-orient:vertical;
-
-    text-overflow:ellipsis;
-}
 
     /* PRICE ROW */
 
@@ -2095,11 +2038,12 @@ footer a:hover{
         border-radius:12px;
     }
 
-   .detail-grid{
-    grid-template-columns:1fr;
-    grid-template-rows:auto auto auto;
-    gap:18px;
-}
+    .detail-grid{
+        grid-template-columns:1fr;
+
+        gap:18px;
+    }
+
     .detail-cover{
         width:100%;
 
@@ -2119,64 +2063,22 @@ footer a:hover{
     .detail-content h1{
         font-size:24px;
     }
-    
-.detail-description-full{
-    grid-column:1;
-    width:100%;
-    margin-top:5px;
-    padding-top:18px;
-}
 
-.detail-description-full h3{
-    font-size:15px;
-    margin-bottom:10px;
-}
-
-.detail-description-text{
-    font-size:13px;
-    line-height:1.7;
-}
     .detail-description{
         font-size:12px;
     }
 
-  .detail-actions{
-    width:100%;
-}
+    .detail-actions{
+        width:100%;
+    }
 
-.detail-buy-row{
-    display:flex;
-    flex-direction:column;
-    width:100%;
-    gap:10px;
-}
+    .detail-buy,
+    .detail-share{
+        flex:1;
 
-.detail-buy-row .detail-buy{
-    width:100%;
-}
+        min-width:130px;
+    }
 
-.detail-buy-row .coupon-box{
-    width:100%;
-}
-
-.detail-buy-row .coupon-row{
-    display:flex;
-    width:100%;
-    gap:7px;
-}
-
-.detail-buy-row .coupon-row input{
-    flex:1;
-    min-width:0;
-}
-
-.detail-buy-row .coupon-row button{
-    flex:0 0 auto;
-}
-
-.detail-share{
-    width:100%;
-}
 
     /* LIBRARY */
 
@@ -2415,40 +2317,6 @@ footer a:hover{
     font-weight:900;
     line-height:1;
 }
-}
-      /* =========================================================
-   VIEW DETAILS BUTTON
-========================================================= */
-
-.view-details-btn{
-    width:100%;
-
-    margin-top:5px;
-    margin-bottom:2px;
-
-    background:#eef5ff;
-
-    color:#2768b5;
-
-    border:1px solid #cfe0f5;
-
-    border-radius:7px;
-
-    padding:8px 7px;
-
-    font-size:10px;
-
-    font-weight:800;
-
-    cursor:pointer;
-
-    transition:.2s;
-}
-
-.view-details-btn:hover{
-    background:#dfeeff;
-
-    transform:translateY(-1px);
 }
 /* =========================
    COUPON BOX
@@ -4427,50 +4295,74 @@ function showDetail(book){
 
     detail.innerHTML = `
 
-       detail.innerHTML = `
+        <div class="detail-box">
 
-    <div class="detail-box">
-
-        <h2 class="detail-main-title">
-            EBOOK DETAILS
-        </h2>
+            <div class="detail-grid">
 
 
-        <div class="detail-grid">
+                <div class="detail-cover">
 
-            <!-- LEFT : COVER -->
-            <div class="detail-cover">
-
-                ${coverHTML}
-
-            </div>
-
-
-            <!-- RIGHT : INFORMATION -->
-            <div class="detail-content">
-
-                <h1>
-                    ${title}
-                </h1>
-
-
-                <span class="detail-category">
-                    ${category}
-                </span>
-
-
-                <div class="detail-price">
-
-                    ${priceData.html}
+                    ${coverHTML}
 
                 </div>
 
 
-                <div class="detail-actions">
+                <div class="detail-content">
 
-                    <!-- BUY + COUPON -->
-                    <div class="detail-buy-row">
+                    <h1>
+                        ${title}
+                    </h1>
 
+
+                    <span class="detail-category">
+                        ${category}
+                    </span>
+
+
+                    <p class="detail-description">
+                        ${description}
+                    </p>
+
+
+                    <div class="detail-price">
+
+                        ${priceData.html}
+
+                    </div>
+
+
+                    <div class="detail-actions">
+
+<div class="coupon-box">
+
+    <div class="coupon-title">
+        🎟️ Have a Coupon?
+    </div>
+
+    <div class="coupon-row">
+
+        <input
+            type="text"
+            id="couponCode"
+            placeholder="Enter Coupon Code"
+            maxlength="50"
+        >
+
+        <button
+            type="button"
+           onclick="redeemCoupon('${escapeJs(book.id)}')"
+        >
+            REDEEM
+        </button>
+
+    </div>
+
+    <div
+        id="couponMessage"
+        class="coupon-message"
+    ></div>
+
+</div>
                         <button
                             class="detail-buy"
                             onclick="
@@ -4484,75 +4376,29 @@ function showDetail(book){
                                         book.id
                                     )}'
                                 )
-                            "
-                        >
+                            ">
+
                             BUY NOW
+
                         </button>
 
 
-                        <div class="coupon-box">
+                        <button
+                            class="detail-share"
+                            onclick="
+                                shareBook(
+                                    '${escapeJs(
+                                        book.id
+                                    )}'
+                                )
+                            ">
 
-                            <div class="coupon-row">
+                            SHARE
 
-                                <input
-                                    type="text"
-                                    id="couponCode"
-                                    placeholder="Coupon Code"
-                                    maxlength="50"
-                                >
+                        </button>
 
-                                <button
-                                    type="button"
-                                    onclick="
-                                        redeemCoupon(
-                                            '${escapeJs(book.id)}'
-                                        )
-                                    "
-                                >
-                                    REDEEM
-                                </button>
-
-                            </div>
-
-
-                            <div
-                                id="couponMessage"
-                                class="coupon-message"
-                            ></div>
-
-                        </div>
 
                     </div>
-
-
-                    <!-- SHARE -->
-                    <button
-                        class="detail-share"
-                        onclick="
-                            shareBook(
-                                '${escapeJs(book.id)}'
-                            )
-                        "
-                    >
-                        SHARE THIS EBOOK
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <!-- DESCRIPTION : FULL WIDTH BOTTOM -->
-            <div class="detail-description-full">
-
-                <h3>
-                    DESCRIPTION
-                </h3>
-
-
-                <div class="detail-description-text">
-
-                    ${description}
 
                 </div>
 
@@ -4560,9 +4406,7 @@ function showDetail(book){
 
         </div>
 
-    </div>
-
-`;
+    `;
 
 
     document
@@ -4825,99 +4669,100 @@ async function loadEbooks(){
                 }
 
 
-              card.innerHTML = `
-
-    <a
-        href="${escapeAttribute(
-            ebookUrl(book.id)
-        )}"
-
-        onclick="
-            openCardLink(
-                event,
-                '${escapeJs(book.id)}'
-            )
-        ">
-
-        ${coverHTML}
-
-    </a>
+                card.innerHTML = `
 
 
-    <h3>
-        ${title}
-    </h3>
+                    <a
+                        href="${escapeAttribute(
+                            ebookUrl(
+                                book.id
+                            )
+                        )}"
+
+                        onclick="
+                            openCardLink(
+                                event,
+                                '${escapeJs(
+                                    book.id
+                                )}'
+                            )
+                        ">
+
+                        ${coverHTML}
+
+                        <h3>
+                            ${title}
+                        </h3>
+
+                    </a>
 
 
-    <span class="category">
-        ${category}
-    </span>
+                    <span class="category">
+
+                        ${category}
+
+                    </span>
 
 
-    <p>
-        ${description}
-    </p>
+                    <p>
+
+                        ${description}
+
+                    </p>
 
 
-    <button
-        class="view-details-btn"
-
-        onclick="
-            openCardLink(
-                event,
-                '${escapeJs(book.id)}'
-            )
-        ">
-
-        VIEW DETAILS
-
-    </button>
+                    <div class="price-row">
 
 
-    <div class="price-row">
+                        <div class="price-box">
 
-        <div class="price-box">
+                            ${priceData.html}
 
-            ${priceData.html}
-
-        </div>
+                        </div>
 
 
-        <button
-            class="buy"
+                        <button
+                            class="buy"
 
-            onclick="
-                buyBook(
-                    '${escapeJs(
-                        book.Title ||
-                        "Ebook"
-                    )}',
-                    ${priceData.salePrice},
-                    '${escapeJs(book.id)}'
-                )
-            ">
+                            onclick="
+                                buyBook(
+                                    '${escapeJs(
+                                        book.Title ||
+                                        "Ebook"
+                                    )}',
+                                    ${priceData.salePrice},
+                                    '${escapeJs(
+                                        book.id
+                                    )}'
+                                )
+                            ">
 
-            BUY NOW
+                            BUY NOW
 
-        </button>
-
-    </div>
+                        </button>
 
 
-    <button
-        class="share-btn"
+                    </div>
 
-        onclick="
-            shareBook(
-                '${escapeJs(book.id)}'
-            )
-        ">
 
-        SHARE THIS EBOOK
+                    <button
+                        class="share-btn"
 
-    </button>
+                        onclick="
+                            shareBook(
+                                '${escapeJs(
+                                    book.id
+                                )}'
+                            )
+                        ">
 
-`;
+                        SHARE THIS EBOOK
+
+                    </button>
+
+
+                `;
+
 
                 grid.appendChild(card);
 
