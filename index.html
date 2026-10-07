@@ -2095,12 +2095,11 @@ footer a:hover{
         border-radius:12px;
     }
 
-    .detail-grid{
-        grid-template-columns:1fr;
-
-        gap:18px;
-    }
-
+   .detail-grid{
+    grid-template-columns:1fr;
+    grid-template-rows:auto auto auto;
+    gap:18px;
+}
     .detail-cover{
         width:100%;
 
@@ -2120,22 +2119,64 @@ footer a:hover{
     .detail-content h1{
         font-size:24px;
     }
+    
+.detail-description-full{
+    grid-column:1;
+    width:100%;
+    margin-top:5px;
+    padding-top:18px;
+}
 
+.detail-description-full h3{
+    font-size:15px;
+    margin-bottom:10px;
+}
+
+.detail-description-text{
+    font-size:13px;
+    line-height:1.7;
+}
     .detail-description{
         font-size:12px;
     }
 
-    .detail-actions{
-        width:100%;
-    }
+  .detail-actions{
+    width:100%;
+}
 
-    .detail-buy,
-    .detail-share{
-        flex:1;
+.detail-buy-row{
+    display:flex;
+    flex-direction:column;
+    width:100%;
+    gap:10px;
+}
 
-        min-width:130px;
-    }
+.detail-buy-row .detail-buy{
+    width:100%;
+}
 
+.detail-buy-row .coupon-box{
+    width:100%;
+}
+
+.detail-buy-row .coupon-row{
+    display:flex;
+    width:100%;
+    gap:7px;
+}
+
+.detail-buy-row .coupon-row input{
+    flex:1;
+    min-width:0;
+}
+
+.detail-buy-row .coupon-row button{
+    flex:0 0 auto;
+}
+
+.detail-share{
+    width:100%;
+}
 
     /* LIBRARY */
 
