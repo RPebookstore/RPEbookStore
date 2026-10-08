@@ -3505,7 +3505,9 @@ async function deleteBook(id){
 async function uploadPdfToBackblaze(file){
 
     if(!file){
-        throw new Error("PDF file not selected");
+        throw new Error(
+            "PDF file not selected"
+        );
     }
 
 
@@ -3516,10 +3518,17 @@ async function uploadPdfToBackblaze(file){
     const {
         data: sessionData,
         error: sessionError
-    } = await supabaseClient.auth.getSession();
+    } =
+        await supabaseClient
+        .auth
+        .getSession();
 
 
-    if(sessionError || !sessionData.session){
+    if(
+        sessionError ||
+        !sessionData ||
+        !sessionData.session
+    ){
 
         throw new Error(
             "Admin login session expired. Please login again."
@@ -3533,70 +3542,85 @@ async function uploadPdfToBackblaze(file){
 
 
     /* =========================================
-       2. GET TEMPORARY BACKBLAZE UPLOAD URL
+       2. GET TEMPORARY B2 UPLOAD URL
     ========================================= */
 
-    const response = await fetch(
+    const response =
+        await fetch(
 
-        `${SUPABASE_URL}/functions/v1/upload-ebook-pdf`,
+            `${SUPABASE_URL}/functions/v1/upload-ebook-pdf`,
 
-        {
-            method: "POST",
+            {
+                method: "POST",
 
-            headers: {
+                headers: {
 
-                "Authorization":
-                    `Bearer ${accessToken}`,
+                    "Authorization":
+                        `Bearer ${accessToken}`,
 
-                "apikey":
-                    SUPABASE_KEY,
+                    "apikey":
+                        SUPABASE_KEY,
 
-                "Content-Type":
-                    "application/json"
+                    "Content-Type":
+                        "application/json"
 
-            },
+                },
 
-            body: JSON.stringify({
-                fileName:
-                    file.name
-            })
+                body:
+                    JSON.stringify({
 
-        }
+                        fileName:
+                            file.name
 
-    );
+                    })
+
+            }
+
+        );
 
 
     const data =
         await response.json();
 
 
-    if(!response.ok || !data.success){
+    if(
+        !response.ok ||
+        !data.success
+    ){
 
         throw new Error(
+
             data.error ||
-            "Could not get Backblaze upload URL"
+            "Backblaze upload URL नहीं मिला।"
+
         );
 
     }
 
 
     /* =========================================
-       3. CREATE SAFE FILE NAME
+       3. SAFE FILE NAME
     ========================================= */
 
     const safeFileName =
         Date.now() +
         "_" +
-        sanitizeFileName(file.name);
+        sanitizeFileName(
+            file.name
+        );
 
 
     /* =========================================
-       4. SHA-1
+       4. FILE DATA
     ========================================= */
 
     const fileBuffer =
         await file.arrayBuffer();
 
+
+    /* =========================================
+       5. SHA-1
+    ========================================= */
 
     const hashBuffer =
         await crypto.subtle.digest(
@@ -3607,7 +3631,9 @@ async function uploadPdfToBackblaze(file){
 
     const hashArray =
         Array.from(
-            new Uint8Array(hashBuffer)
+            new Uint8Array(
+                hashBuffer
+            )
         );
 
 
@@ -3615,14 +3641,18 @@ async function uploadPdfToBackblaze(file){
         hashArray
         .map(
             b =>
-                b.toString(16)
-                .padStart(2,"0")
+                b
+                .toString(16)
+                .padStart(
+                    2,
+                    "0"
+                )
         )
         .join("");
 
 
     /* =========================================
-       5. UPLOAD DIRECTLY TO BACKBLAZE
+       6. DIRECT UPLOAD TO BACKBLAZE
     ========================================= */
 
     const uploadResponse =
@@ -3631,6 +3661,7 @@ async function uploadPdfToBackblaze(file){
             data.uploadUrl,
 
             {
+
                 method: "POST",
 
                 headers: {
@@ -3644,11 +3675,12 @@ async function uploadPdfToBackblaze(file){
                         ),
 
                     "Content-Type":
-                        file.type ||
                         "application/pdf",
 
                     "Content-Length":
-                        String(file.size),
+                        String(
+                            file.size
+                        ),
 
                     "X-Bz-Content-Sha1":
                         sha1
@@ -3676,7 +3708,7 @@ async function uploadPdfToBackblaze(file){
 
             uploadResult.message ||
             uploadResult.code ||
-            "Backblaze PDF upload failed"
+            "Backblaze PDF upload failed."
 
         );
 
@@ -3684,10 +3716,13 @@ async function uploadPdfToBackblaze(file){
 
 
     /* =========================================
-       6. RETURN DATABASE VALUE
+       7. RETURN VALUE FOR DATABASE
     ========================================= */
 
-    return "b2:" + safeFileName;
+    return (
+        "b2:" +
+        safeFileName
+    );
 
 }
 function sanitizeFileName(name){
