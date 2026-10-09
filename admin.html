@@ -893,6 +893,60 @@ textarea{
 ```
 
 <!-- =====================================================
+     TOTAL REVENUE
+===================================================== -->
+
+<div id="revenueSection" class="card admin-view">
+
+    <button
+        type="button"
+        class="dashboard-back"
+        onclick="showAdminDashboard()"
+    >
+        ← Back to Dashboard
+    </button>
+
+    <h2>💰 Total Revenue</h2>
+
+    <button
+        type="button"
+        class="primary"
+        onclick="loadRevenue()"
+    >
+        🔄 Refresh Revenue
+    </button>
+
+    <div id="revenueMessage" class="message">
+        Revenue देखने के लिए Refresh दबाएँ।
+    </div>
+
+    <div style="margin:12px 0;padding:15px;border:1px solid #ddd;border-radius:10px;">
+        <p>कुल कमाई</p>
+        <h2 id="totalRevenue">₹0.00</h2>
+        <p>सफल Paid Orders: <strong id="totalPaidOrders">0</strong></p>
+    </div>
+
+    <h3>📚 eBook-wise Sales</h3>
+
+    <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;min-width:320px;">
+            <thead>
+                <tr>
+                    <th style="text-align:left;padding:8px;">eBook</th>
+                    <th style="text-align:right;padding:8px;">Paid Orders</th>
+                    <th style="text-align:right;padding:8px;">Revenue</th>
+                </tr>
+            </thead>
+            <tbody id="revenueBody"></tbody>
+        </table>
+    </div>
+
+</div>
+
+<!-- =====================================================
+     END TOTAL REVENUE
+===================================================== -->
+<!-- =====================================================
      PURCHASES / ORDERS
 ===================================================== -->
 
