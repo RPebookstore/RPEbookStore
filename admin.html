@@ -4257,7 +4257,10 @@ function openAdminSection(sectionId) {
 
     menu.style.display = "none";
     section.classList.add("active");
-
+if (sectionId === "couponSection") {
+    loadCouponEbooks();
+    loadCoupons();
+}
     window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -4272,6 +4275,164 @@ function showAdminDashboard() {
     menu.style.display = "grid";
 
     window.scrollTo({ top: 0, behavior: "smooth" });
+}
+</script>
+    
+<script>
+async function loadCouponEbooks() {
+    const select = document.getElementById("couponEbookId");
+    select.replaceChildren(new Option("eBooks लोड हो रही हैं...", ""));
+
+    const { data, error } = await supabaseClient
+        .from("Ebooks")
+        .select("id, Title")
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        select.replaceChildren(new Option("eBooks लोड नहीं हुईं", ""));
+        document.getElementById("couponMessage").textContent =
+            "eBook Error: " + error.message;
+        return;
+    }
+
+    select.replaceChildren(new Option("eBook चुनें", ""));
+
+    (data || []).forEach(book => {
+        select.add(new Option(book.Title, book.id));
+    });
+}
+
+async function loadCoupons() {
+    const list = document.getElementById("couponList");
+    list.textContent = "Coupons लोड हो रहे हैं...";
+
+    const { data, error } = await supabaseClient
+        .from("coupons")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        list.textContent = "Coupon लोड करने में समस्या: " + error.message;
+        return;
+    }
+
+    list.replaceChildren();
+
+    if (!data || data.length === 0) {
+        list.textContent = "अभी कोई Coupon नहीं बना है।";
+        return;
+    }
+
+    data.forEach(coupon => {
+        const item = document.createElement("div");
+        item.style.cssText =
+            "border:1px solid #ddd;padding:12px;margin:10px 0;border-radius:8px";
+
+        const info = document.createElement("p");
+        info.textContent =
+            "Code: " + coupon.code +
+            " | eBook ID: " + coupon.ebook_id +
+            " | Used: " + coupon.used_count + "/" +
+            (coupon.max_uses ?? "Unlimited") +
+            " | " + (coupon.is_active ? "Active" : "Inactive") +
+            (coupon.expires_at
+                ? " | Expiry: " + new Date(coupon.expires_at).toLocaleString()
+                : " | No expiry");
+
+        const toggle = document.createElement("button");
+        toggle.type = "button";
+        toggle.className = "primary";
+        toggle.textContent = coupon.is_active
+            ? "Deactivate"
+            : "Activate";
+
+        toggle.onclick = async () => {
+            toggle.disabled = true;
+
+            const { error: updateError } = await supabaseClient
+                .from("coupons")
+                .update({ is_active: !coupon.is_active })
+                .eq("id", coupon.id);
+
+            if (updateError) {
+                document.getElementById("couponMessage").textContent =
+                    "Update Error: " + updateError.message;
+                toggle.disabled = false;
+                return;
+            }
+
+            document.getElementById("couponMessage").textContent =
+                "Coupon status updated.";
+            await loadCoupons();
+        };
+
+        item.append(info, toggle);
+        list.appendChild(item);
+    });
+}
+
+async function createCoupon() {
+    const message = document.getElementById("couponMessage");
+    message.textContent = "";
+
+    const code = document.getElementById("newCouponCode")
+        .value.trim().toUpperCase();
+
+    const ebookId = document.getElementById("couponEbookId").value;
+    const expiryValue = document.getElementById("couponExpiry").value;
+    const maxUses = Number(document.getElementById("couponMaxUses").value);
+    const isActive = document.getElementById("couponIsActive").checked;
+
+    if (!/^[A-Z0-9_-]{3,40}$/.test(code)) {
+        message.textContent =
+            "Coupon Code में 3–40 अक्षर, नंबर, _ या - इस्तेमाल करें।";
+        return;
+    }
+
+    if (!ebookId) {
+        message.textContent = "पहले एक eBook चुनें।";
+        return;
+    }
+
+    if (!Number.isInteger(maxUses) || maxUses < 1) {
+        message.textContent = "Maximum Uses कम से कम 1 होना चाहिए।";
+        return;
+    }
+
+    let expiry = null;
+
+    if (expiryValue) {
+        const parsedDate = new Date(expiryValue);
+
+        if (Number.isNaN(parsedDate.getTime())) {
+            message.textContent = "Expiry Date सही नहीं है।";
+            return;
+        }
+
+        expiry = parsedDate.toISOString();
+    }
+
+    const { error } = await supabaseClient
+        .from("coupons")
+        .insert({
+            code: code,
+            ebook_id: Number(ebookId),
+            is_active: isActive,
+            expires_at: expiry,
+            max_uses: maxUses,
+            used_count: 0
+        });
+
+    if (error) {
+        message.textContent = "Coupon Create Error: " + error.message;
+        return;
+    }
+
+    message.textContent = "Coupon successfully created: " + code;
+    document.getElementById("newCouponCode").value = "";
+    document.getElementById("couponExpiry").value = "";
+
+    await loadCoupons();
 }
 </script>
 </body>
