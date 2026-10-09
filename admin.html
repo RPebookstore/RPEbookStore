@@ -829,6 +829,60 @@ textarea{
 
     <div id="couponMessage" class="message"></div>
 
+<div class="coupon-form">
+
+    <h3>➕ Create New Coupon</h3>
+
+    <label>Coupon Code</label>
+    <input
+        type="text"
+        id="newCouponCode"
+        placeholder="जैसे SAVE20"
+    >
+
+    <label>eBook चुनें</label>
+    <select id="couponEbookId">
+        <option value="">Loading eBooks...</option>
+    </select>
+
+    <label>Expiry Date & Time (Optional)</label>
+    <input
+        type="datetime-local"
+        id="couponExpiry"
+    >
+
+    <label>Maximum Uses</label>
+    <input
+        type="number"
+        id="couponMaxUses"
+        min="1"
+        value="100"
+    >
+
+    <label>
+        <input
+            type="checkbox"
+            id="couponIsActive"
+            checked
+        >
+        Coupon Active रखें
+    </label>
+
+    <button
+        type="button"
+        class="primary"
+        onclick="createCoupon()"
+    >
+        Create Coupon
+    </button>
+
+    <h3>📋 Existing Coupons</h3>
+
+    <div id="couponList">
+        Coupons अभी लोड नहीं हुए हैं।
+    </div>
+
+</div>
     <p>Coupon Management Setup — अगला चरण बाकी है।</p>
 
 </div>
