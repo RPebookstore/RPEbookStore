@@ -3655,15 +3655,26 @@ async function uploadPdfToBackblaze(file){
        6. DIRECT UPLOAD TO BACKBLAZE
     ========================================= */
 
-    const uploadResponse =
-        await fetch(
+   
+let uploadResponse;
 
-            data.uploadUrl,
-
-            {
-
-                method: "POST",
-
+try {
+    uploadResponse = await fetch(data.uploadUrl, {
+        method: "POST",
+        headers: {
+            "Authorization": data.authorizationToken,
+            "X-Bz-File-Name": encodeURIComponent(safeFileName),
+            "Content-Type": file.type || "application/pdf",
+            "X-Bz-Content-Sha1": sha1
+        },
+        body: fileBuffer
+    });
+} catch (error) {
+    console.error("Backblaze browser upload error:", error);
+    throw new Error(
+        "Backblaze connection/CORS error. Browser console check karein."
+    );
+}
                 headers: {
 
                     "Authorization":
