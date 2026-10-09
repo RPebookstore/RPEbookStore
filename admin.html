@@ -4145,5 +4145,39 @@ function formatPurchaseDate(
 }
 </script>
 
+<script>
+function openAdminSection(sectionId) {
+    const menu = document.getElementById("dashboardMenu");
+    const section = document.getElementById(sectionId);
+
+    if (!section) {
+        alert("यह विकल्प अभी तैयार नहीं है। इसे अगले चरण में जोड़ेंगे।");
+        return;
+    }
+
+    document.querySelectorAll("#adminPanel .admin-view")
+        .forEach(function (item) {
+            item.classList.remove("active");
+        });
+
+    menu.style.display = "none";
+    section.classList.add("active");
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function showAdminDashboard() {
+    document.querySelectorAll("#adminPanel .admin-view")
+        .forEach(function (item) {
+            item.classList.remove("active");
+        });
+
+    const menu = document.getElementById("dashboardMenu");
+
+    menu.style.display = "grid";
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+</script>
 </body>
 </html>
