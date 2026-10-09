@@ -3189,6 +3189,7 @@ async function updateEbook(id){
 
         const newPdfPath =
             Date.now() +
+        
             "_edit_" +
             sanitizeFileName(
                 newPdf.name
@@ -3502,239 +3503,92 @@ async function deleteBook(id){
 /* =====================================================
    SANITIZE FILE NAME
 ===================================================== */
-async function uploadPdfToBackblaze(file){
 
-    if(!file){
-        throw new Error(
-            "PDF file not selected"
-        );
+async function uploadPdfToBackblaze(file) {
+
+    if (!file) {
+        throw new Error("PDF file not selected");
     }
 
+    const { data: sessionData, error: sessionError } =
+        await supabaseClient.auth.getSession();
 
-    /* =========================================
-       1. CURRENT LOGIN SESSION
-    ========================================= */
-
-    const {
-        data: sessionData,
-        error: sessionError
-    } =
-        await supabaseClient
-        .auth
-        .getSession();
-
-
-    if(
-        sessionError ||
-        !sessionData ||
-        !sessionData.session
-    ){
-
+    if (sessionError || !sessionData?.session) {
         throw new Error(
             "Admin login session expired. Please login again."
         );
-
     }
 
+    const accessToken = sessionData.session.access_token;
 
-    const accessToken =
-        sessionData.session.access_token;
+    const response = await fetch(
+        `${SUPABASE_URL}/functions/v1/upload-ebook-pdf`,
+        {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+                "apikey": SUPABASE_KEY,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                fileName: file.name
+            })
+        }
+    );
 
+    const data = await response.json();
 
-    /* =========================================
-       2. GET TEMPORARY B2 UPLOAD URL
-    ========================================= */
-
-    const response =
-        await fetch(
-
-            `${SUPABASE_URL}/functions/v1/upload-ebook-pdf`,
-
-            {
-                method: "POST",
-
-                headers: {
-
-                    "Authorization":
-                        `Bearer ${accessToken}`,
-
-                    "apikey":
-                        SUPABASE_KEY,
-
-                    "Content-Type":
-                        "application/json"
-
-                },
-
-                body:
-                    JSON.stringify({
-
-                        fileName:
-                            file.name
-
-                    })
-
-            }
-
-        );
-
-
-    const data =
-        await response.json();
-
-
-    if(
-        !response.ok ||
-        !data.success
-    ){
-
+    if (!response.ok || !data.success) {
         throw new Error(
-
-            data.error ||
-            "Backblaze upload URL नहीं मिला।"
-
+            data.error || "Backblaze upload URL nahi mila."
         );
-
     }
-
-
-    /* =========================================
-       3. SAFE FILE NAME
-    ========================================= */
 
     const safeFileName =
-        Date.now() +
-        "_" +
-        sanitizeFileName(
-            file.name
-        );
+        Date.now() + "_" + sanitizeFileName(file.name);
 
+    const fileBuffer = await file.arrayBuffer();
 
-    /* =========================================
-       4. FILE DATA
-    ========================================= */
+    const hashBuffer = await crypto.subtle.digest(
+        "SHA-1",
+        fileBuffer
+    );
 
-    const fileBuffer =
-        await file.arrayBuffer();
-
-
-    /* =========================================
-       5. SHA-1
-    ========================================= */
-
-    const hashBuffer =
-        await crypto.subtle.digest(
-            "SHA-1",
-            fileBuffer
-        );
-
-
-    const hashArray =
-        Array.from(
-            new Uint8Array(
-                hashBuffer
-            )
-        );
-
-
-    const sha1 =
-        hashArray
-        .map(
-            b =>
-                b
-                .toString(16)
-                .padStart(
-                    2,
-                    "0"
-                )
-        )
+    const sha1 = Array.from(new Uint8Array(hashBuffer))
+        .map(b => b.toString(16).padStart(2, "0"))
         .join("");
 
+    let uploadResponse;
 
-    /* =========================================
-       6. DIRECT UPLOAD TO BACKBLAZE
-    ========================================= */
-
-   
-let uploadResponse;
-
-try {
-    uploadResponse = await fetch(data.uploadUrl, {
-        method: "POST",
-        headers: {
-            "Authorization": data.authorizationToken,
-            "X-Bz-File-Name": encodeURIComponent(safeFileName),
-            "Content-Type": file.type || "application/pdf",
-            "X-Bz-Content-Sha1": sha1
-        },
-        body: fileBuffer
-    });
-} catch (error) {
-    console.error("Backblaze browser upload error:", error);
-    throw new Error(
-        "Backblaze connection/CORS error. Browser console check karein."
-    );
-}
-                headers: {
-
-                    "Authorization":
-                        data.authorizationToken,
-
-                    "X-Bz-File-Name":
-                        encodeURIComponent(
-                            safeFileName
-                        ),
-
-                    "Content-Type":
-                        "application/pdf",
-
-                    "Content-Length":
-                        String(
-                            file.size
-                        ),
-
-                    "X-Bz-Content-Sha1":
-                        sha1
-
-                },
-
-                body:
-                    fileBuffer
-
-            }
-
-        );
-
-
-    const uploadResult =
-        await uploadResponse.json();
-
-
-    if(
-        !uploadResponse.ok ||
-        !uploadResult.fileId
-    ){
-
+    try {
+        uploadResponse = await fetch(data.uploadUrl, {
+            method: "POST",
+            headers: {
+                "Authorization": data.authorizationToken,
+                "X-Bz-File-Name": encodeURIComponent(safeFileName),
+                "Content-Type": file.type || "application/pdf",
+                "X-Bz-Content-Sha1": sha1
+            },
+            body: fileBuffer
+        });
+    } catch (error) {
+        console.error("Backblaze browser upload error:", error);
         throw new Error(
+            "Backblaze CORS/connection error. Upload nahi hua."
+        );
+    }
 
+    const uploadResult = await uploadResponse.json();
+
+    if (!uploadResponse.ok || !uploadResult.fileId) {
+        throw new Error(
             uploadResult.message ||
             uploadResult.code ||
             "Backblaze PDF upload failed."
-
         );
-
     }
 
-
-    /* =========================================
-       7. RETURN VALUE FOR DATABASE
-    ========================================= */
-
-    return (
-        "b2:" +
-        safeFileName
-    );
-
+    return "b2:" + safeFileName;
 }
 function sanitizeFileName(name){
 
