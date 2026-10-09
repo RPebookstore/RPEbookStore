@@ -4331,7 +4331,7 @@ async function loadCoupons() {
       
 const row = document.createElement("div");
 row.style.cssText =
-    "display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:nowrap;";
+   "display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap;width:100%;";
 
 const info = document.createElement("div");
 info.style.cssText =
@@ -4351,7 +4351,7 @@ const toggle = document.createElement("button");
 toggle.type = "button";
 toggle.className = "primary";
 toggle.style.cssText =
-    "flex-shrink:0;padding:8px 10px;white-space:nowrap;font-size:12px;";
+   "flex-shrink:0;padding:8px 10px;white-space:nowrap;font-size:12px;min-width:100px;";
 toggle.textContent = coupon.is_active
     ? "Deactivate"
     : "Activate";
