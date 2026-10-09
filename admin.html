@@ -4551,9 +4551,14 @@ async function loadRevenue() {
 
         const purchases = data.purchases || [];
 
-        const successful = purchases.filter(purchase =>
-            String(purchase.payment_status || "").trim().toUpperCase() === "SUCCESS"
-        );
+      
+const successful = purchases.filter(purchase => {
+    const status = String(
+        purchase.payment_status || purchase.status || ""
+    ).trim().toUpperCase();
+
+    return status === "SUCCESS";
+});
 
         const total = successful.reduce((sum, purchase) => {
             const amount = Number(purchase.amount);
