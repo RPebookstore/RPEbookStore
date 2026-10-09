@@ -4503,5 +4503,121 @@ async function createCoupon() {
     await loadCoupons();
 }
 </script>
+    
+<script>
+async function loadRevenue() {
+    const message = document.getElementById("revenueMessage");
+    const revenueTotal = document.getElementById("totalRevenue");
+    const paidOrders = document.getElementById("totalPaidOrders");
+    const body = document.getElementById("revenueBody");
+
+    message.textContent = "⏳ Revenue लोड हो रहा है...";
+    revenueTotal.textContent = "₹0.00";
+    paidOrders.textContent = "0";
+    body.replaceChildren();
+
+    try {
+        const { data: sessionData, error: sessionError } =
+            await supabaseClient.auth.getSession();
+
+        if (sessionError) throw sessionError;
+
+        const session = sessionData?.session;
+
+        if (!session) {
+            throw new Error("Admin session नहीं मिला। दोबारा Login करें।");
+        }
+
+        const response = await fetch(
+            `${SUPABASE_URL}/functions/v1/admin-purchases`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${session.access_token}`,
+                    "apikey": SUPABASE_KEY
+                },
+                body: JSON.stringify({})
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            throw new Error(
+                data.error || data.message || "Purchases लोड नहीं हुए।"
+            );
+        }
+
+        const purchases = data.purchases || [];
+
+        const successful = purchases.filter(purchase =>
+            String(purchase.payment_status || "").trim().toUpperCase() === "SUCCESS"
+        );
+
+        const total = successful.reduce((sum, purchase) => {
+            const amount = Number(purchase.amount);
+            return sum + (Number.isFinite(amount) ? amount : 0);
+        }, 0);
+
+        revenueTotal.textContent = "₹" + total.toFixed(2);
+        paidOrders.textContent = String(successful.length);
+
+        const ebookSales = new Map();
+
+        successful.forEach(purchase => {
+            const title = purchase.ebook_title || "Unknown eBook";
+            const previous = ebookSales.get(title) || {
+                count: 0,
+                revenue: 0
+            };
+
+            previous.count += 1;
+
+            const amount = Number(purchase.amount);
+            if (Number.isFinite(amount)) {
+                previous.revenue += amount;
+            }
+
+            ebookSales.set(title, previous);
+        });
+
+        if (ebookSales.size === 0) {
+            const row = document.createElement("tr");
+            const cell = document.createElement("td");
+            cell.colSpan = 3;
+            cell.textContent = "अभी कोई SUCCESS भुगतान नहीं मिला।";
+            cell.style.padding = "10px";
+            row.appendChild(cell);
+            body.appendChild(row);
+        } else {
+            ebookSales.forEach((sale, title) => {
+                const row = document.createElement("tr");
+
+                const titleCell = document.createElement("td");
+                titleCell.textContent = title;
+                titleCell.style.cssText = "padding:8px;overflow-wrap:anywhere;";
+
+                const countCell = document.createElement("td");
+                countCell.textContent = String(sale.count);
+                countCell.style.cssText = "padding:8px;text-align:right;";
+
+                const amountCell = document.createElement("td");
+                amountCell.textContent = "₹" + sale.revenue.toFixed(2);
+                amountCell.style.cssText = "padding:8px;text-align:right;";
+
+                row.append(titleCell, countCell, amountCell);
+                body.appendChild(row);
+            });
+        }
+
+        message.textContent =
+            "✅ Revenue अपडेट हो गया। केवल SUCCESS भुगतान शामिल हैं।";
+
+    } catch (error) {
+        message.textContent = "❌ Revenue Error: " + error.message;
+    }
+}
+</script>
 </body>
 </html>
