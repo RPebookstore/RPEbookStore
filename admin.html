@@ -4306,11 +4306,10 @@ async function loadCoupons() {
     const list = document.getElementById("couponList");
     list.textContent = "Coupons लोड हो रहे हैं...";
 
-    const { data, error } = await supabaseClient
-        .from("coupons")
-        .select("*")
-        .order("created_at", { ascending: false });
-
+   const { data, error } = await supabaseClient
+    .from("coupons")
+    .select("*")
+    .order("created_at", { ascending: false });
     if (error) {
         list.textContent = "Coupon लोड करने में समस्या: " + error.message;
         return;
@@ -4339,7 +4338,11 @@ info.style.cssText =
 
 info.textContent =
     "Code: " + coupon.code +
-    " | eBook ID: " + coupon.ebook_id +
+ " | eBook: " + (
+    document.querySelector(
+        '#couponEbookId option[value="' + coupon.ebook_id + '"]'
+    )?.textContent || "ID " + coupon.ebook_id
+) +
     " | Used: " + coupon.used_count + "/" +
     (coupon.max_uses ?? "Unlimited") +
     " | " + (coupon.is_active ? "Active" : "Inactive") +
