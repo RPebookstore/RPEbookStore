@@ -4328,45 +4328,56 @@ async function loadCoupons() {
         item.style.cssText =
             "border:1px solid #ddd;padding:12px;margin:10px 0;border-radius:8px";
 
-        const info = document.createElement("p");
-        info.textContent =
-            "Code: " + coupon.code +
-            " | eBook ID: " + coupon.ebook_id +
-            " | Used: " + coupon.used_count + "/" +
-            (coupon.max_uses ?? "Unlimited") +
-            " | " + (coupon.is_active ? "Active" : "Inactive") +
-            (coupon.expires_at
-                ? " | Expiry: " + new Date(coupon.expires_at).toLocaleString()
-                : " | No expiry");
+      
+const row = document.createElement("div");
+row.style.cssText =
+    "display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:nowrap;";
 
-        const toggle = document.createElement("button");
-        toggle.type = "button";
-        toggle.className = "primary";
-        toggle.textContent = coupon.is_active
-            ? "Deactivate"
-            : "Activate";
+const info = document.createElement("div");
+info.style.cssText =
+    "flex:1;min-width:0;overflow-wrap:anywhere;font-size:13px;";
 
-        toggle.onclick = async () => {
-            toggle.disabled = true;
+info.textContent =
+    "Code: " + coupon.code +
+    " | eBook ID: " + coupon.ebook_id +
+    " | Used: " + coupon.used_count + "/" +
+    (coupon.max_uses ?? "Unlimited") +
+    " | " + (coupon.is_active ? "Active" : "Inactive") +
+    (coupon.expires_at
+        ? " | Expiry: " + new Date(coupon.expires_at).toLocaleString()
+        : " | No expiry");
 
-            const { error: updateError } = await supabaseClient
-                .from("coupons")
-                .update({ is_active: !coupon.is_active })
-                .eq("id", coupon.id);
+const toggle = document.createElement("button");
+toggle.type = "button";
+toggle.className = "primary";
+toggle.style.cssText =
+    "flex-shrink:0;padding:8px 10px;white-space:nowrap;font-size:12px;";
+toggle.textContent = coupon.is_active
+    ? "Deactivate"
+    : "Activate";
 
-            if (updateError) {
-                document.getElementById("couponMessage").textContent =
-                    "Update Error: " + updateError.message;
-                toggle.disabled = false;
-                return;
-            }
+toggle.onclick = async () => {
+    toggle.disabled = true;
 
-            document.getElementById("couponMessage").textContent =
-                "Coupon status updated.";
-            await loadCoupons();
-        };
+    const { error: updateError } = await supabaseClient
+        .from("coupons")
+        .update({ is_active: !coupon.is_active })
+        .eq("id", coupon.id);
 
-        item.append(info, toggle);
+    if (updateError) {
+        document.getElementById("couponMessage").textContent =
+            "Update Error: " + updateError.message;
+        toggle.disabled = false;
+        return;
+    }
+
+    document.getElementById("couponMessage").textContent =
+        "Coupon status updated.";
+    await loadCoupons();
+};
+
+row.append(info, toggle);
+item.appendChild(row);
         list.appendChild(item);
     });
 }
