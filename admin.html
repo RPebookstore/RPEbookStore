@@ -3504,6 +3504,7 @@ async function deleteBook(id){
    SANITIZE FILE NAME
 ===================================================== */
 
+
 async function uploadPdfToBackblaze(file) {
 
     if (!file) {
@@ -3528,67 +3529,22 @@ async function uploadPdfToBackblaze(file) {
             headers: {
                 "Authorization": `Bearer ${accessToken}`,
                 "apikey": SUPABASE_KEY,
-                "Content-Type": "application/json"
+                "Content-Type": "application/pdf",
+                "x-file-name": file.name
             },
-            body: JSON.stringify({
-                fileName: file.name
-            })
+            body: file
         }
     );
 
     const data = await response.json();
 
-    if (!response.ok || !data.success) {
+    if (!response.ok || !data.success || !data.pdf_url) {
         throw new Error(
-            data.error || "Backblaze upload URL nahi mila."
+            data.error || "PDF upload failed."
         );
     }
 
-    const safeFileName =
-        Date.now() + "_" + sanitizeFileName(file.name);
-
-    const fileBuffer = await file.arrayBuffer();
-
-    const hashBuffer = await crypto.subtle.digest(
-        "SHA-1",
-        fileBuffer
-    );
-
-    const sha1 = Array.from(new Uint8Array(hashBuffer))
-        .map(b => b.toString(16).padStart(2, "0"))
-        .join("");
-
-    let uploadResponse;
-
-    try {
-        uploadResponse = await fetch(data.uploadUrl, {
-            method: "POST",
-            headers: {
-                "Authorization": data.authorizationToken,
-                "X-Bz-File-Name": encodeURIComponent(safeFileName),
-                "Content-Type": file.type || "application/pdf",
-                "X-Bz-Content-Sha1": sha1
-            },
-            body: fileBuffer
-        });
-    } catch (error) {
-        console.error("Backblaze browser upload error:", error);
-        throw new Error(
-            "Backblaze CORS/connection error. Upload nahi hua."
-        );
-    }
-
-    const uploadResult = await uploadResponse.json();
-
-    if (!uploadResponse.ok || !uploadResult.fileId) {
-        throw new Error(
-            uploadResult.message ||
-            uploadResult.code ||
-            "Backblaze PDF upload failed."
-        );
-    }
-
-    return "b2:" + safeFileName;
+    return data.pdf_url;
 }
 function sanitizeFileName(name){
 
