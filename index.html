@@ -4649,9 +4649,10 @@ function showDetail(book){
         .style.display = "block";
 
 
-    window.scrollTo({
-        top:0,
-        behavior:"smooth"
+   
+    document.getElementById("ebookDetail").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
     });
 
 }
