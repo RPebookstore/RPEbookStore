@@ -2571,6 +2571,34 @@ footer a:hover{
 }
 </style>
 
+<script>
+(function () {
+    try {
+        var visitorId = localStorage.getItem("rp_ebook_visitor_id");
+
+        if (!visitorId) {
+            visitorId = "rp_" + (
+                window.crypto && window.crypto.randomUUID
+                    ? window.crypto.randomUUID()
+                    : Date.now() + "_" + Math.random().toString(36).slice(2)
+            );
+            localStorage.setItem("rp_ebook_visitor_id", visitorId);
+        }
+
+        fetch("https://whtiyeyqcvbajschqbli.supabase.co/functions/v1/track-website-visit", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "apikey": "sb_publishable_c8F6pYJre6Yj8KX3aKDdmA_PAyQeSXy"
+            },
+            body: JSON.stringify({
+                visitor_id: visitorId,
+                page_path: window.location.pathname + window.location.search
+            })
+        }).catch(function () {});
+    } catch (e) {}
+})();
+</script>
 </head>
 
 
