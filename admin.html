@@ -3450,48 +3450,21 @@ async function updateEbook(id){
        NEW PDF
     ================================================= */
 
-    if(newPdf){
+ 
+if (newPdf) {
 
+    msg.textContent =
+        "Uploading new PDF to Backblaze...";
+
+    try {
+        pdfPath = await uploadPdfToBackblaze(newPdf);
+    } catch (error) {
         msg.textContent =
-        "Uploading new PDF...";
-
-
-        const newPdfPath =
-            Date.now() +
-        
-            "_edit_" +
-            sanitizeFileName(
-                newPdf.name
-            );
-
-
-        const {
-            error:pdfError
-        } =
-            await supabaseClient
-            .storage
-            .from("ebook-pdfs")
-            .upload(
-                newPdfPath,
-                newPdf
-            );
-
-
-        if(pdfError){
-
-            msg.textContent =
-            "New PDF upload failed: " +
-            pdfError.message;
-
-            return;
-        }
-
-
-        pdfPath =
-            newPdfPath;
-
+            "New PDF upload failed: " + error.message;
+        return;
     }
 
+}
 
     /* =================================================
        UPDATE DATABASE
