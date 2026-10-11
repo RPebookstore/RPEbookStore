@@ -4105,11 +4105,11 @@ function goHome(){
         .style.display = "block";
 
 
-    window.scrollTo({
-        top:0,
-        behavior:"smooth"
-    });
 
+    document.getElementById("ebooks").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
 }
 
 
