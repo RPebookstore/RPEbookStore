@@ -2409,6 +2409,166 @@ footer a:hover{
         width:100%;
     }
 }
+
+/* ===== RP EBOOK STORE 3D HERO BOOKS ===== */
+
+.hero-art {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(170px, 0.9fr);
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    min-height: 320px;
+    height: auto;
+    overflow: visible;
+}
+
+.hero-art .books {
+    position: relative;
+    width: 100%;
+    max-width: 260px;
+    height: 280px;
+    margin: auto;
+    perspective: 900px;
+    transform: none;
+}
+
+.hero-art .mock-book {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    width: 155px;
+    height: 215px;
+    box-sizing: border-box;
+    padding: 16px 10px;
+    border-radius: 3px 8px 8px 3px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 13px;
+    text-align: center;
+    color: white;
+    pointer-events: none;
+    border-left: 5px solid rgba(255,255,255,.35);
+    box-shadow:
+        inset 5px 0 0 rgba(255,255,255,.12),
+        inset -4px 0 0 rgba(0,0,0,.12),
+        8px 12px 20px rgba(0,0,0,.22);
+}
+
+.hero-art .mock-book span {
+    font-size: 8px;
+    letter-spacing: 1px;
+}
+
+.hero-art .mock-book strong {
+    font-size: 18px;
+    line-height: 1.3;
+}
+
+.hero-art .mock-book small {
+    font-size: 8px;
+    line-height: 1.5;
+}
+
+.hero-art .mock-book-one {
+    background: linear-gradient(140deg, #214f85, #071c38);
+    transform: translateX(-68%) rotate(-7deg) rotateY(-12deg);
+    z-index: 3;
+}
+
+.hero-art .mock-book-two {
+    background: linear-gradient(140deg, #e6bd58, #956318);
+    transform: translateX(-42%) rotate(3deg) rotateY(-8deg);
+    z-index: 2;
+}
+
+.hero-art .mock-book-three {
+    background: linear-gradient(140deg, #39765b, #123b2c);
+    transform: translateX(-16%) rotate(10deg) rotateY(-12deg);
+    z-index: 1;
+}
+
+/* RIGHT SIDE SLOGANS */
+
+.hero-slogans {
+    min-width: 0;
+    padding: 12px 0 12px 12px;
+    border-left: 2px solid #d9a52e;
+    pointer-events: none;
+}
+
+.hero-slogans h3 {
+    color: #102b4b;
+    font-size: 13px;
+    line-height: 1.4;
+    margin: 0 0 14px;
+}
+
+.hero-slogans p {
+    color: #3d4e63;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.5;
+    margin: 0 0 12px;
+}
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+    .hero-art {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 4px;
+        min-height: 240px;
+        height: auto;
+    }
+
+    .hero-art .books {
+        height: 220px;
+        transform: scale(.78);
+        transform-origin: center;
+    }
+
+    .hero-art .mock-book {
+        width: 125px;
+        height: 175px;
+        top: 20px;
+        padding: 10px 6px;
+    }
+
+    .hero-art .mock-book strong {
+        font-size: 14px;
+    }
+
+    .hero-slogans {
+        padding-left: 8px;
+    }
+
+    .hero-slogans h3 {
+        font-size: 11px;
+        margin-bottom: 10px;
+    }
+
+    .hero-slogans p {
+        font-size: 10px;
+        margin-bottom: 10px;
+    }
+}
+
+@media (max-width: 380px) {
+    .hero-art .books {
+        transform: scale(.65);
+    }
+
+    .hero-slogans h3 {
+        font-size: 10px;
+    }
+
+    .hero-slogans p {
+        font-size: 9px;
+    }
+}
 </style>
 
 </head>
@@ -2589,35 +2749,38 @@ and competitive exam preparation.
 </div>
 
 
+
 <div class="hero-art">
 
-<div class="books">
+    <div class="books" aria-hidden="true">
 
-<div class="big-book book-top">
-📖<br>
-KNOWLEDGE IS POWER
+        <div class="mock-book mock-book-one">
+            <span>RP EBOOK STORE</span>
+            <strong>KNOWLEDGE</strong>
+            <small>LEARN • GROW • SUCCEED</small>
+        </div>
+
+        <div class="mock-book mock-book-two">
+            <span>PREMIUM EDITION</span>
+            <strong>SMART<br>LEARNING</strong>
+        </div>
+
+        <div class="mock-book mock-book-three">
+            <span>RP EBOOK STORE</span>
+            <strong>YOUR<br>SUCCESS</strong>
+        </div>
+
+    </div>
+
+    <div class="hero-slogans" aria-hidden="true">
+        <h3>📖 KNOWLEDGE IS POWER</h3>
+        <p>Better Knowledge</p>
+        <p>Brighter Tomorrow</p>
+        <p>Stronger Preparation</p>
+        <p>Greater Success</p>
+    </div>
+
 </div>
-
-<div class="big-book book-blue">
-Better Knowledge
-</div>
-
-<div class="big-book book-gold">
-Brighter Tomorrow
-</div>
-
-<div class="big-book book-green">
-Stronger Preparation
-</div>
-
-<div class="big-book book-purple">
-Greater Success
-</div>
-
-</div>
-
-</div>
-
 
 </div>
 
