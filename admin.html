@@ -812,6 +812,70 @@ textarea{
 <!-- ===== END DASHBOARD MENU ===== -->
   
 <!-- =====================================================
+     WEBSITE VISITORS
+===================================================== -->
+
+<div id="visitorsSection" class="card admin-view">
+
+    <button
+        type="button"
+        class="dashboard-back"
+        onclick="showAdminDashboard()"
+    >
+        ← Back to Dashboard
+    </button>
+
+    <h2>📊 Website Visitors</h2>
+
+    <button
+        type="button"
+        class="primary"
+        onclick="loadWebsiteVisitors()"
+    >
+        🔄 Refresh Visitors
+    </button>
+
+    <div id="visitorsMessage" class="message">
+        Visitors report देखने के लिए Refresh दबाएँ।
+    </div>
+
+    <div class="price-grid">
+
+        <div class="card">
+            <p>आज के विज़िटर</p>
+            <h2 id="visitorsToday">0</h2>
+        </div>
+
+        <div class="card">
+            <p>इस महीने के विज़िटर</p>
+            <h2 id="visitorsMonth">0</h2>
+        </div>
+
+        <div class="card">
+            <p>कुल विज़िटर</p>
+            <h2 id="visitorsTotal">0</h2>
+        </div>
+
+    </div>
+
+    <h3>📅 Day-wise Visitors</h3>
+
+    <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;min-width:300px;">
+            <thead>
+                <tr>
+                    <th style="text-align:left;padding:8px;">तारीख</th>
+                    <th style="text-align:right;padding:8px;">विज़िटर</th>
+                </tr>
+            </thead>
+            <tbody id="visitorsDailyBody"></tbody>
+        </table>
+    </div>
+
+</div>
+
+<!-- ===== END WEBSITE VISITORS ===== -->
+<!-- =====================================================
      COUPON MANAGEMENT
 ===================================================== -->
 
@@ -4602,6 +4666,62 @@ const successful = purchases.filter(purchase => {
         message.textContent = "❌ Revenue Error: " + error.message;
     }
 }
+
+async function loadWebsiteVisitors() {
+    const message = document.getElementById("visitorsMessage");
+
+    message.textContent = "Visitors report लोड हो रही है...";
+
+    try {
+        const { data: sessionData, error: sessionError } =
+            await supabaseClient.auth.getSession();
+
+        if (sessionError || !sessionData?.session) {
+            throw new Error("Admin login करें, फिर दोबारा Refresh दबाएँ।");
+        }
+
+        const { data, error } = await supabaseClient.rpc(
+            "get_website_visitor_report"
+        );
+
+        if (error) throw error;
+
+        document.getElementById("visitorsToday").textContent =
+            data.today ?? 0;
+
+        document.getElementById("visitorsMonth").textContent =
+            data.month ?? 0;
+
+        document.getElementById("visitorsTotal").textContent =
+            data.total ?? 0;
+
+        const tbody = document.getElementById("visitorsDailyBody");
+        tbody.innerHTML = "";
+
+        (data.daily || []).forEach(function (day) {
+            const tr = document.createElement("tr");
+
+            const dateCell = document.createElement("td");
+            dateCell.style.padding = "8px";
+            dateCell.textContent = day.visit_date;
+
+            const countCell = document.createElement("td");
+            countCell.style.padding = "8px";
+            countCell.style.textAlign = "right";
+            countCell.textContent = day.visitors;
+
+            tr.appendChild(dateCell);
+            tr.appendChild(countCell);
+            tbody.appendChild(tr);
+        });
+
+        message.textContent = "Visitors report अपडेट हो गई।";
+    } catch (error) {
+        console.error("Visitors report error:", error);
+        message.textContent =
+            error.message || "Visitors report लोड नहीं हो सकी।";
+    }
+}    
 </script>
 </body>
 </html>
