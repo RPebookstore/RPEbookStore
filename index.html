@@ -5417,10 +5417,27 @@ async function buyBook(
     customerPhone = null
 ){
 
-    if (!customerName || !customerPhone) {
-        showCustomerForm(name, price, id);
-        return;
-    }
+   
+if (!customerName || !customerPhone) {
+    const book = (allEbooks || []).find(
+        item => String(item.id) === String(id)
+    );
+
+    const originalPrice = book
+        ? book.OriginalPrice
+        : price;
+
+    showCustomerForm(
+        name,
+        price,
+        id,
+        "payment",
+        "",
+        originalPrice
+    );
+
+    return;
+}
 
     try{
         const response =
