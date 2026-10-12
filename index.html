@@ -5367,14 +5367,69 @@ async function redeemCoupon(ebookId){
     }
 
 }
+
+function showCustomerForm(name, price, id) {
+    const oldForm = document.getElementById("customerPaymentForm");
+    if (oldForm) oldForm.remove();
+
+    const form = document.createElement("div");
+    form.id = "customerPaymentForm";
+    form.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:99999;display:flex;align-items:center;justify-content:center;padding:18px;";
+
+    form.innerHTML = `
+        <div style="background:white;padding:24px;border-radius:14px;width:100%;max-width:380px;box-sizing:border-box;">
+            <h2 style="margin-top:0;">Customer Details</h2>
+            <p>${escapeHtml(name)}</p>
+
+            <label for="buyerName">आपका नाम</label>
+            <input id="buyerName" type="text" maxlength="100" autocomplete="name" placeholder="पूरा नाम" style="width:100%;box-sizing:border-box;padding:12px;margin:8px 0 14px;">
+
+            <label for="buyerPhone">मोबाइल नंबर</label>
+            <input id="buyerPhone" type="tel" maxlength="10" inputmode="numeric" autocomplete="tel-national" placeholder="10 अंकों का मोबाइल नंबर" style="width:100%;box-sizing:border-box;padding:12px;margin:8px 0 18px;">
+
+            <button id="customerPayNow" type="button" style="width:100%;padding:13px;background:#16a34a;color:white;border:0;border-radius:8px;font-weight:bold;cursor:pointer;">PAY NOW</button>
+
+            <button type="button" id="customerFormCancel" style="width:100%;padding:11px;margin-top:8px;border:0;background:#eee;border-radius:8px;cursor:pointer;">CANCEL</button>
+        </div>
+    `;
+
+    document.body.appendChild(form);
+
+    document.getElementById("customerFormCancel").onclick = () => form.remove();
+
+    document.getElementById("customerPayNow").onclick = async () => {
+        const customerName = document.getElementById("buyerName").value.trim();
+        const customerPhone = document.getElementById("buyerPhone").value.trim();
+
+        if (!customerName) {
+            alert("कृपया अपना नाम भरें।");
+            return;
+        }
+
+        if (!/^[6-9]\d{9}$/.test(customerPhone)) {
+            alert("कृपया सही 10 अंकों का मोबाइल नंबर भरें।");
+            return;
+        }
+
+        form.remove();
+        await buyBook(name, price, id, customerName, customerPhone);
+    };
+}      
+
 async function buyBook(
     name,
     price,
-    id
+    id,
+    customerName = null,
+    customerPhone = null
 ){
 
-    try{
+    if (!customerName || !customerPhone) {
+        showCustomerForm(name, price, id);
+        return;
+    }
 
+    try{
         const response =
             await fetch(
 
@@ -5399,13 +5454,12 @@ async function buyBook(
 
                     },
 
-                    body:
-                        JSON.stringify({
-
-                            ebook_id:id
-
-                        })
-
+                   
+body: JSON.stringify({
+    ebook_id: id,
+    customer_name: customerName,
+    customer_phone: customerPhone
+})
                 }
 
             );
