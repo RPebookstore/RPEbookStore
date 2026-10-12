@@ -1070,9 +1070,12 @@ textarea{
 
                     <th>Ebook</th>
 
-                    <th>Email</th>
+                    
+<th>Customer Name</th>
 
-                    <th>Mobile</th>
+<th>Email</th>
+
+<th>Mobile</th>
 
                     <th>Order ID</th>
 
@@ -4147,19 +4150,23 @@ async function loadPurchases() {
                             ${escapePurchaseHtml(
                                 purchase.ebook_id
                             )}
+                       
+                    <td>
+                        <small>
+                            ID: ${escapePurchaseHtml(purchase.ebook_id)}
                         </small>
                     </td>
 
                     <td>
-                        ${escapePurchaseHtml(
-                            purchase.customer_email
-                        )}
+                        ${escapePurchaseHtml(purchase.customer_name)}
                     </td>
 
                     <td>
-                        ${escapePurchaseHtml(
-                            purchase.customer_phone
-                        )}
+                        ${escapePurchaseHtml(purchase.customer_email)}
+                    </td>
+
+                    <td>
+                        ${escapePurchaseHtml(purchase.customer_phone)}
                     </td>
 
                     <td>
