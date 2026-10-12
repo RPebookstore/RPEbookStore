@@ -204,12 +204,16 @@
           heading.innerHTML =
             "✅ Payment Verified";
 
-          status.innerHTML =
-            "आपका payment successfully verify हो गया है।<br><br>" +
-            "<strong>" +
-            (data.title || "Your Ebook") +
-            "</strong><br><br>" +
-            "नीचे Download Ebook पर क्लिक करें।";
+       
+status.innerHTML =
+  "आपका payment successfully verify हो गया है।<br><br>" +
+  "<strong>" +
+  (data.title || "Your Ebook") +
+  "</strong><br><br>" +
+  "<strong>Transaction ID:</strong> " +
+  (data.payment_id || "अभी उपलब्ध नहीं") +
+  "<br><br>" +
+  "नीचे Download Ebook पर क्लिक करें।";
 
 
           download.href =
