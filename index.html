@@ -5198,40 +5198,80 @@ async function shareBook(id){
 
 
 
+
 async function redeemCoupon(ebookId) {
-const input = document.getElementById("couponCode");
-const message = document.getElementById("couponMessage");
-const code = input.value.trim().toUpperCase();
+    const input = document.getElementById("couponCode");
+    const message = document.getElementById("couponMessage");
+    const code = input.value.trim().toUpperCase();
 
-if (!code) {
-    message.textContent = "कृपया Coupon Code डालें।";
-    return;
-}
+    if (!code) {
+        message.textContent = "कृपया Coupon Code डालें।";
+        return;
+    }
 
-const book = (allEbooks || []).find(
-    item => String(item.id) === String(ebookId)
-);
+    const book = (allEbooks || []).find(
+        item => String(item.id) === String(ebookId)
+    );
 
-if (!book) {
-    message.textContent =
-        "eBook की कीमत नहीं मिली। कृपया पेज Refresh करके फिर कोशिश करें।";
-    return;
-}
+    if (!book) {
+        message.textContent =
+            "eBook की कीमत नहीं मिली। कृपया पेज Refresh करके फिर कोशिश करें।";
+        return;
+    }
 
-const salePrice = Number(book.Price) || 0;
-const originalPrice = Number(book.OriginalPrice) || salePrice;
+    message.textContent = "Coupon जाँचा जा रहा है...";
 
-message.textContent = "कृपया नाम और मोबाइल नंबर भरें।";
+    try {
+        const response = await fetch(
+            SUPABASE_URL + "/rest/v1/rpc/validate_coupon",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": "Bearer " + SUPABASE_KEY
+                },
+                body: JSON.stringify({
+                    p_code: code,
+                    p_ebook_id: Number(ebookId)
+                })
+            }
+        );
 
-showCustomerForm(
-    book.Title || "eBook",
-    salePrice,
-    ebookId,
-    "coupon",
-    code,
-    originalPrice
-);
+        if (!response.ok) {
+            message.textContent =
+                "Coupon जाँचा नहीं जा सका। कृपया फिर कोशिश करें।";
+            return;
+        }
 
+        const result = await response.json();
+        const coupon = Array.isArray(result) ? result[0] : result;
+
+        if (!coupon || coupon.success !== true) {
+            message.textContent = "INVALID COUPON";
+            return;
+        }
+
+        const salePrice = Number(book.Price) || 0;
+        const originalPrice =
+            Number(book.OriginalPrice) || salePrice;
+
+        message.textContent = "VALID COUPON";
+
+        showCustomerForm(
+            book.Title || "eBook",
+            salePrice,
+            ebookId,
+            "coupon",
+            code,
+            originalPrice
+        );
+
+    } catch (error) {
+        console.error("Coupon Validation Error:", error);
+        message.textContent =
+            "Coupon जाँचा नहीं जा सका। कृपया फिर कोशिश करें।";
+    }
 }
 
 function showCustomerForm(
