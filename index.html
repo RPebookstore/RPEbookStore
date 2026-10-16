@@ -2681,6 +2681,102 @@ footer a:hover{
         font-size: 20px;
     }
 }
+
+/* =========================================
+   EBOOK RATINGS & REVIEWS
+========================================= */
+
+.ebook-reviews-section {
+    margin-top: 28px;
+    padding: 22px;
+    border: 1px solid #e5eaf0;
+    border-radius: 14px;
+    background: #fff;
+}
+
+.ebook-reviews-section h2 {
+    margin: 0 0 8px;
+    color: #10233f;
+    font-size: 22px;
+}
+
+.ebook-rating-summary {
+    margin: 12px 0 20px;
+    color: #667085;
+}
+
+.ebook-rating-stars {
+    color: #f4b522;
+    font-size: 23px;
+    letter-spacing: 2px;
+}
+
+.ebook-review-form {
+    display: grid;
+    gap: 12px;
+    margin: 18px 0 24px;
+}
+
+.ebook-review-form input,
+.ebook-review-form select,
+.ebook-review-form textarea {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d7deea;
+    border-radius: 8px;
+    font: inherit;
+    background: #fff;
+}
+
+.ebook-review-form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.ebook-review-submit {
+    padding: 12px 16px;
+    border: 0;
+    border-radius: 8px;
+    background: #f4b522;
+    color: #17202d;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.ebook-review-message {
+    color: #344054;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.ebook-review-item {
+    padding: 16px 0;
+    border-top: 1px solid #e8edf3;
+}
+
+.ebook-review-item h3 {
+    margin: 0 0 6px;
+    font-size: 15px;
+    color: #172b46;
+}
+
+.ebook-review-item p {
+    margin: 8px 0 0;
+    color: #475467;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 700px) {
+    .ebook-reviews-section {
+        padding: 15px;
+    }
+
+    .ebook-reviews-section h2 {
+        font-size: 20px;
+    }
+}
       
 </style>
 
@@ -4558,6 +4654,233 @@ function renderRelatedEbooks(book) {
     `);
 }
 
+/* =========================================
+   EBOOK RATINGS & REVIEWS
+========================================= */
+
+async function renderEbookReviews(book) {
+
+    const detail = document.getElementById("detailContent");
+
+    if (!detail || !book) return;
+
+    const bookId = String(book.id);
+
+    detail.insertAdjacentHTML("beforeend", `
+        <section class="ebook-reviews-section">
+
+            <h2>⭐ Ratings & Reviews</h2>
+
+            <div id="ebookRatingSummary" class="ebook-rating-summary">
+                रेटिंग लोड हो रही है...
+            </div>
+
+            <form
+                class="ebook-review-form"
+                data-ebook-id="${escapeAttribute(bookId)}"
+                onsubmit="submitEbookReview(event)"
+            >
+
+                <strong>अपनी रेटिंग और समीक्षा दें</strong>
+
+                <input
+                    type="text"
+                    name="reviewer_name"
+                    placeholder="आपका नाम"
+                    maxlength="60"
+                    minlength="2"
+                    required
+                >
+
+                <select name="rating" required>
+                    <option value="">स्टार रेटिंग चुनें</option>
+                    <option value="5">⭐⭐⭐⭐⭐ — 5 स्टार</option>
+                    <option value="4">⭐⭐⭐⭐ — 4 स्टार</option>
+                    <option value="3">⭐⭐⭐ — 3 स्टार</option>
+                    <option value="2">⭐⭐ — 2 स्टार</option>
+                    <option value="1">⭐ — 1 स्टार</option>
+                </select>
+
+                <textarea
+                    name="review_text"
+                    placeholder="इस किताब के बारे में अपनी राय लिखें..."
+                    minlength="5"
+                    maxlength="1000"
+                    required
+                ></textarea>
+
+                <button
+                    type="submit"
+                    class="ebook-review-submit"
+                >
+                    समीक्षा सबमिट करें
+                </button>
+
+            </form>
+
+            <div
+                id="reviewSubmitMessage"
+                class="ebook-review-message"
+                role="status"
+                aria-live="polite"
+            ></div>
+
+            <div id="ebookReviewsList">
+                समीक्षाएँ लोड हो रही हैं...
+            </div>
+
+        </section>
+    `);
+
+    await loadEbookReviews(bookId);
+}
+
+
+/* LOAD APPROVED REVIEWS */
+
+async function loadEbookReviews(bookId) {
+
+    const summary = document.getElementById("ebookRatingSummary");
+    const list = document.getElementById("ebookReviewsList");
+
+    if (!summary || !list) return;
+
+    const { data, error } = await supabaseClient
+        .from("ebook_reviews")
+        .select("reviewer_name, rating, review_text, created_at")
+        .eq("ebook_id", String(bookId))
+        .eq("status", "approved")
+        .order("created_at", { ascending: false });
+
+    if (error) {
+
+        console.error("Review loading error:", error);
+
+        summary.textContent = "रेटिंग अभी लोड नहीं हो सकी।";
+        list.textContent = "कृपया थोड़ी देर बाद फिर कोशिश करें।";
+
+        return;
+    }
+
+    const reviews = data || [];
+
+    if (reviews.length === 0) {
+
+        summary.textContent = "अभी कोई प्रकाशित रेटिंग नहीं है।";
+        list.textContent = "पहली प्रकाशित समीक्षा जल्द यहाँ दिखाई देगी।";
+
+        return;
+    }
+
+    const total = reviews.length;
+
+    const average = reviews.reduce(
+        (sum, item) => sum + Number(item.rating),
+        0
+    ) / total;
+
+    const roundedStars = Math.round(average);
+
+    summary.innerHTML = `
+        <div class="ebook-rating-stars">
+            ${"★".repeat(roundedStars)}${"☆".repeat(5 - roundedStars)}
+        </div>
+        <strong>${average.toFixed(1)} / 5</strong>
+        — ${total} प्रकाशित ${total === 1 ? "समीक्षा" : "समीक्षाएँ"}
+    `;
+
+    list.innerHTML = reviews.map(item => {
+
+        const name = escapeHtml(item.reviewer_name || "पाठक");
+        const text = escapeHtml(item.review_text || "");
+        const stars = Number(item.rating);
+
+        return `
+            <article class="ebook-review-item">
+
+                <h3>${name}</h3>
+
+                <div class="ebook-rating-stars">
+                    ${"★".repeat(stars)}${"☆".repeat(5 - stars)}
+                </div>
+
+                <p>${text}</p>
+
+            </article>
+        `;
+
+    }).join("");
+}
+
+
+/* SUBMIT A REVIEW FOR ADMIN APPROVAL */
+
+async function submitEbookReview(event) {
+
+    event.preventDefault();
+
+    const form = event.currentTarget;
+
+    const message = document.getElementById("reviewSubmitMessage");
+
+    if (!form || !message) return;
+
+    const reviewerName = form.elements["reviewer_name"].value.trim();
+    const rating = Number(form.elements["rating"].value);
+    const reviewText = form.elements["review_text"].value.trim();
+    const ebookId = form.dataset.ebookId;
+
+    if (
+        reviewerName.length < 2 ||
+        reviewerName.length > 60 ||
+        !Number.isInteger(rating) ||
+        rating < 1 ||
+        rating > 5 ||
+        reviewText.length < 5 ||
+        reviewText.length > 1000
+    ) {
+
+        message.textContent = "कृपया नाम, 1–5 स्टार और 5–1000 अक्षरों की समीक्षा भरें।";
+        return;
+    }
+
+    const submitButton = form.querySelector('button[type="submit"]');
+
+    submitButton.disabled = true;
+    message.textContent = "आपकी समीक्षा सबमिट हो रही है...";
+
+    try {
+
+        const { error } = await supabaseClient
+            .from("ebook_reviews")
+            .insert({
+                ebook_id: String(ebookId),
+                reviewer_name: reviewerName,
+                rating: rating,
+                review_text: reviewText
+            });
+
+        if (error) throw error;
+
+        form.reset();
+
+        message.textContent =
+            "धन्यवाद! आपकी समीक्षा जाँच के लिए भेज दी गई है। स्वीकृत होने के बाद दिखाई देगी।";
+
+    } catch (error) {
+
+        console.error("Review submission error:", error);
+
+        message.textContent =
+            "समीक्षा सबमिट नहीं हो सकी। कृपया फिर कोशिश करें।";
+
+    } finally {
+
+        submitButton.disabled = false;
+
+    }
+}
+
 /* =========================================================
    SHOW DETAIL
 ========================================================= */
@@ -4857,6 +5180,7 @@ function showDetail(book){
     `;
 
 renderRelatedEbooks(book);
+renderEbookReviews(book);
     document
         .getElementById(
             "ebooks"
