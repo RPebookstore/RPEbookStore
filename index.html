@@ -2589,6 +2589,99 @@ footer a:hover{
         font-size: 9px;
     }
 }
+
+/* RELATED EBOOKS */
+.related-books-section {
+    margin-top: 28px;
+    padding: 22px;
+    background: #ffffff;
+    border: 1px solid #e5eaf0;
+    border-radius: 14px;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.05);
+}
+
+.related-books-heading {
+    font-size: 23px;
+    line-height: 1.4;
+    margin-bottom: 6px;
+    color: #10233f;
+}
+
+.related-books-subtitle {
+    color: #667085;
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+.related-books-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.related-book-card {
+    min-width: 0;
+    padding: 10px;
+    background: #fff;
+    border: 1px solid #e5eaf0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.related-book-cover {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    display: block;
+    object-fit: contain;
+    background: #fff;
+    border-radius: 7px;
+}
+
+.related-book-title {
+    font-size: 14px;
+    line-height: 1.4;
+    margin: 10px 0 6px;
+    overflow-wrap: anywhere;
+}
+
+.related-book-price {
+    color: #118943;
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.related-book-btn {
+    width: 100%;
+    min-height: 40px;
+    border: 0;
+    border-radius: 7px;
+    background: #f4b522;
+    color: #111;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.related-book-btn:hover {
+    background: #e4a718;
+}
+
+@media (max-width: 700px) {
+    .related-books-section {
+        padding: 14px;
+    }
+
+    .related-books-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .related-books-heading {
+        font-size: 20px;
+    }
+}
+      
 </style>
 
 <script>
@@ -4374,6 +4467,97 @@ function getPriceHTML(book){
 }
 
 
+/* =========================================
+   RELATED EBOOKS
+   ========================================= */
+
+function renderRelatedEbooks(book) {
+
+    const detail = document.getElementById("detailContent");
+
+    if (!detail || !book) return;
+
+    const currentCategory = String(book.category || "")
+        .trim()
+        .toLowerCase();
+
+    if (!currentCategory) return;
+
+    const relatedBooks = allEbooks
+        .filter(item =>
+            item.Published === true &&
+            String(item.id) !== String(book.id) &&
+            String(item.category || "").trim().toLowerCase()
+                === currentCategory
+        )
+        .slice(0, 4);
+
+    if (relatedBooks.length === 0) return;
+
+    const cardsHTML = relatedBooks.map(item => {
+
+        const title = escapeHtml(item.Title || "Ebook");
+        const id = escapeJs(item.id);
+        const price = Number(item.Price || 0);
+
+        const coverHTML = item.cover_url
+            ? `<img class="related-book-cover"
+                    src="${escapeAttribute(item.cover_url)}"
+                    alt="${escapeAttribute(item.Title || "Ebook")}"
+                    loading="lazy">`
+            : `<div class="related-book-cover"
+                    style="display:flex;align-items:center;
+                    justify-content:center;padding:10px;
+                    overflow-wrap:anywhere;">
+                    📖 ${title}
+               </div>`;
+
+        return `
+            <article class="related-book-card">
+
+                ${coverHTML}
+
+                <h3 class="related-book-title">
+                    ${title}
+                </h3>
+
+                <div class="related-book-price">
+                    ₹${price}
+                </div>
+
+                <button
+                    type="button"
+                    class="related-book-btn"
+                    onclick="openEbook('${id}')">
+
+                    किताब देखें
+
+                </button>
+
+            </article>
+        `;
+
+    }).join("");
+
+    detail.insertAdjacentHTML("beforeend", `
+        <section class="related-books-section">
+
+            <h2 class="related-books-heading">
+                📚 इसी कैटेगरी की अन्य किताबें
+            </h2>
+
+            <p class="related-books-subtitle">
+                अपनी जरूरत के अनुसार दूसरी उपयोगी किताबें भी देखें।
+            </p>
+
+            <div class="related-books-grid">
+                ${cardsHTML}
+            </div>
+
+        </section>
+    `);
+}
+
 /* =========================================================
    SHOW DETAIL
 ========================================================= */
@@ -4672,7 +4856,7 @@ function showDetail(book){
 
     `;
 
-
+renderRelatedEbooks(book);
     document
         .getElementById(
             "ebooks"
