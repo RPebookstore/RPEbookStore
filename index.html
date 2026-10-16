@@ -5377,11 +5377,13 @@ function showCustomerForm(
             return;
         }
 
-        if (!isCoupon) {
-            form.remove();
-            await buyBook(name, price, id, customerName, customerPhone);
-            return;
-        }
+       
+if (!isCoupon) {
+    submitButton.disabled = true;
+    submitButton.textContent = "कृपया प्रतीक्षा करें...";
+    await buyBook(name, price, id, customerName, customerPhone);
+    return;
+}
 
         submitButton.disabled = true;
         submitButton.textContent = "कृपया प्रतीक्षा करें...";
@@ -5489,6 +5491,14 @@ if (!customerName || !customerPhone) {
     return;
 }
 
+    const restorePayButton = () => {
+        const button = document.getElementById("customerPayNow");
+        if (button) {
+            button.disabled = false;
+            button.textContent = "PAY NOW";
+        }
+    };
+
     try{
         const response =
             await fetch(
@@ -5549,7 +5559,7 @@ body: JSON.stringify({
                 )
 
             );
-
+           restorePayButton();
             return;
 
         }
@@ -5562,7 +5572,7 @@ body: JSON.stringify({
             alert(
                 "Payment session नहीं मिला."
             );
-
+            restorePayButton();
             return;
 
         }
@@ -5609,7 +5619,7 @@ body: JSON.stringify({
             "Please try again."
 
         );
-
+        restorePayButton();
     }
 
 }
