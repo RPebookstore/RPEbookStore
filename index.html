@@ -2777,7 +2777,20 @@ footer a:hover{
         font-size: 20px;
     }
 }
-      
+ /* CARD RATING */
+.card-rating-summary {
+    margin: 8px 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #475467;
+}
+
+.card-rating-stars {
+    color: #f4b522;
+    letter-spacing: 1px;
+    font-size: 15px;
+    font-weight: 700;
+}     
 </style>
 
 <script>
@@ -5353,7 +5366,42 @@ async function loadEbooks(){
 
 
         allEbooks = data;
+allEbooks = data;
 
+// Approved reviews se har ebook ki rating nikalein
+window.ebookRatingSummary = {};
+
+try {
+    const { data: reviews, error: reviewError } =
+        await supabaseClient
+            .from("ebook_reviews")
+            .select("ebook_id, rating")
+            .eq("status", "approved");
+
+    if (reviewError) {
+        console.error("Rating load error:", reviewError);
+    } else {
+        (reviews || []).forEach(review => {
+            const id = String(review.ebook_id);
+
+            if (!window.ebookRatingSummary[id]) {
+                window.ebookRatingSummary[id] = {
+                    total: 0,
+                    count: 0
+                };
+            }
+
+            window.ebookRatingSummary[id].total +=
+                Number(review.rating) || 0;
+
+            window.ebookRatingSummary[id].count++;
+        });
+    }
+} catch (reviewError) {
+    console.error("Rating load exception:", reviewError);
+}
+
+grid.innerHTML = "";
         grid.innerHTML = "";
 
 
@@ -5393,7 +5441,25 @@ async function loadEbooks(){
 
                 const priceData =
                     getPriceHTML(book);
+const rating = (
+    window.ebookRatingSummary || {}
+)[String(book.id)];
 
+let ratingHTML = "";
+
+if (rating && rating.count > 0) {
+    const average = rating.total / rating.count;
+    const stars =
+        "★".repeat(Math.round(average)) +
+        "☆".repeat(5 - Math.round(average));
+
+    ratingHTML = `
+        <span class="card-rating-stars">${stars}</span>
+        <span>${average.toFixed(1)} (${rating.count} reviews)</span>
+    `;
+} else {
+    ratingHTML = `<span>अभी कोई रेटिंग नहीं</span>`;
+}
 
                 let coverHTML = "";
 
@@ -5465,7 +5531,9 @@ async function loadEbooks(){
                         <h3>
                             ${title}
                         </h3>
-
+                   <div class="card-rating-summary">
+    ${ratingHTML}
+</div>
                     </a>
 
 
