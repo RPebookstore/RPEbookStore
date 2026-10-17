@@ -689,7 +689,7 @@ textarea{
 }
 
 
-/* Purchases table: readable desktop table and no horizontal scrolling on phones */
+/* Purchases table: keep each purchase on one horizontal row */
 .purchases-table-wrap {
     width: 100%;
     max-width: 100%;
@@ -703,15 +703,35 @@ textarea{
 
 #purchasesTable th,
 #purchasesTable td {
-    padding: 9px 8px;
+    padding: 8px 7px;
     text-align: left;
-    vertical-align: top;
-    overflow-wrap: anywhere;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+#purchasesTable td[data-label="Ebook"] {
+    max-width: 260px;
+}
+
+#purchasesTable .purchase-ebook-title {
+    display: inline-block;
+    max-width: 190px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+#purchasesTable .purchase-ebook-id {
+    display: inline-block;
+    margin-left: 5px;
+    color: #667085;
+    white-space: nowrap;
 }
 
 @media (max-width: 600px) {
     .purchases-table-wrap {
-        overflow-x: visible !important;
+        overflow-x: hidden !important;
     }
 
     #purchasesTable {
@@ -719,61 +739,42 @@ textarea{
         min-width: 0 !important;
         width: 100% !important;
         table-layout: fixed;
+        font-size: 9px;
     }
 
-    #purchasesTable thead {
+    #purchasesTable th,
+    #purchasesTable td {
+        padding: 5px 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: middle;
+    }
+
+    #purchasesTable th:nth-child(1), #purchasesTable td:nth-child(1) { width: 7%; }
+    #purchasesTable th:nth-child(2), #purchasesTable td:nth-child(2) { width: 27%; }
+    #purchasesTable th:nth-child(3), #purchasesTable td:nth-child(3) { width: 19%; }
+    #purchasesTable th:nth-child(5), #purchasesTable td:nth-child(5) { width: 19%; }
+    #purchasesTable th:nth-child(8), #purchasesTable td:nth-child(8) { width: 10%; }
+    #purchasesTable th:nth-child(9), #purchasesTable td:nth-child(9) { width: 18%; }
+
+    /* Keep the most useful fields visible on a phone; other details remain on PC. */
+    #purchasesTable th:nth-child(4), #purchasesTable td:nth-child(4),
+    #purchasesTable th:nth-child(6), #purchasesTable td:nth-child(6),
+    #purchasesTable th:nth-child(7), #purchasesTable td:nth-child(7),
+    #purchasesTable th:nth-child(10), #purchasesTable td:nth-child(10),
+    #purchasesTable th:nth-child(11), #purchasesTable td:nth-child(11),
+    #purchasesTable th:nth-child(12), #purchasesTable td:nth-child(12) {
         display: none;
     }
 
-    #purchasesTable tbody {
-        display: block;
-        width: 100%;
+    #purchasesTable .purchase-ebook-title {
+        max-width: 100%;
+        font-size: 9px;
     }
 
-    #purchasesTable tbody tr {
-        display: block;
-        width: 100%;
-        box-sizing: border-box;
-        margin: 0 0 14px;
-        padding: 8px 10px;
-        border: 1px solid #d8dee8;
-        border-radius: 10px;
-        background: #fff;
-        box-shadow: 0 2px 7px rgba(0,0,0,.05);
-    }
-
-    #purchasesTable tbody td {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 10px;
-        width: 100%;
-        box-sizing: border-box;
-        padding: 8px 2px;
-        border: 0;
-        border-bottom: 1px solid #edf0f4;
-        white-space: normal;
-        overflow-wrap: anywhere;
-        word-break: break-word;
-        font-size: 13px;
-    }
-
-    #purchasesTable tbody td:last-child {
-        border-bottom: 0;
-    }
-
-    #purchasesTable tbody td::before {
-        content: attr(data-label);
-        flex: 0 0 36%;
-        max-width: 36%;
-        color: #475467;
-        font-weight: 700;
-        overflow-wrap: anywhere;
-    }
-
-    #purchasesTable tbody td > * {
-        min-width: 0;
-        max-width: 64%;
+    #purchasesTable .purchase-ebook-id {
+        display: none;
     }
 }
 
@@ -4218,9 +4219,8 @@ async function loadPurchases() {
                 row.innerHTML = `
                     <td data-label="ID">${escapePurchaseHtml(purchase.id)}</td>
                     <td data-label="Ebook">
-                        <strong>${escapePurchaseHtml(purchase.ebook_title)}</strong>
-                        <br>
-                        <small>ID: ${escapePurchaseHtml(purchase.ebook_id)}</small>
+                        <strong class="purchase-ebook-title" title="${escapePurchaseHtml(purchase.ebook_title)}">${escapePurchaseHtml(purchase.ebook_title)}</strong>
+                        <small class="purchase-ebook-id">ID: ${escapePurchaseHtml(purchase.ebook_id)}</small>
                     </td>
                     <td data-label="Customer Name">${escapePurchaseHtml(purchase.customer_name)}</td>
                     <td data-label="Email">${escapePurchaseHtml(purchase.customer_email)}</td>
