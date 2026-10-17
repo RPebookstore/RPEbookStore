@@ -689,93 +689,54 @@ textarea{
 }
 
 
-/* Purchases table: keep each purchase on one horizontal row */
-.purchases-table-wrap {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: auto;
+/* Purchases table: fit desktop width without horizontal scrolling */
+.purchase-table-wrap { width:100%; max-width:100%; overflow-x:hidden; }
+.purchase-table { width:100%; min-width:0 !important; table-layout:fixed; border-collapse:collapse; font-size:11px; }
+.purchase-table th, .purchase-table td { padding:6px 4px; border:1px solid #d9e0e8; text-align:left; vertical-align:top; white-space:normal; overflow-wrap:anywhere; word-break:normal; }
+.purchase-table th { background:#eef3f8; font-weight:700; }
+.purchase-table th:nth-child(1), .purchase-table td:nth-child(1) { width:4%; }
+.purchase-table th:nth-child(2), .purchase-table td:nth-child(2) { width:15%; }
+.purchase-table th:nth-child(3), .purchase-table td:nth-child(3) { width:13%; }
+.purchase-table th:nth-child(4), .purchase-table td:nth-child(4) { width:9%; }
+.purchase-table th:nth-child(5), .purchase-table td:nth-child(5) { width:12%; }
+.purchase-table th:nth-child(6), .purchase-table td:nth-child(6) { width:10%; }
+.purchase-table th:nth-child(7), .purchase-table td:nth-child(7) { width:5%; }
+.purchase-table th:nth-child(8), .purchase-table td:nth-child(8) { width:7%; }
+.purchase-table th:nth-child(9), .purchase-table td:nth-child(9) { width:10%; }
+.purchase-table th:nth-child(10), .purchase-table td:nth-child(10) { width:5%; }
+.purchase-table th:nth-child(11), .purchase-table td:nth-child(11) { width:10%; }
+.purchase-print-row { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+.purchase-print-btn { border:0; border-radius:6px; padding:8px 13px; background:#10233f; color:#fff; font-weight:700; cursor:pointer; }
+@media(max-width:600px) {
+  .purchase-table { font-size:10px; }
+  .purchase-table th, .purchase-table td { padding:5px 3px; }
+  /* Keep the key customer details visible on phones; the full name wraps instead of being cut off. */
+  .purchase-table th:nth-child(5), .purchase-table td:nth-child(5),
+  .purchase-table th:nth-child(6), .purchase-table td:nth-child(6),
+  .purchase-table th:nth-child(9), .purchase-table td:nth-child(9),
+  .purchase-table th:nth-child(10), .purchase-table td:nth-child(10),
+  .purchase-table th:nth-child(11), .purchase-table td:nth-child(11) { display:none; }
+  .purchase-table th:nth-child(1), .purchase-table td:nth-child(1) { width:9%; }
+  .purchase-table th:nth-child(2), .purchase-table td:nth-child(2) { width:27%; }
+  .purchase-table th:nth-child(3), .purchase-table td:nth-child(3) { width:27%; }
+  .purchase-table th:nth-child(4), .purchase-table td:nth-child(4) { width:17%; }
+  .purchase-table th:nth-child(7), .purchase-table td:nth-child(7) { width:9%; }
+  .purchase-table th:nth-child(8), .purchase-table td:nth-child(8) { width:11%; }
 }
-
-#purchasesTable {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-#purchasesTable th,
-#purchasesTable td {
-    padding: 8px 7px;
-    text-align: left;
-    vertical-align: middle;
-    white-space: nowrap;
-}
-
-#purchasesTable td[data-label="Ebook"] {
-    max-width: 260px;
-}
-
-#purchasesTable .purchase-ebook-title {
-    display: inline-block;
-    max-width: 190px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    vertical-align: middle;
-    white-space: nowrap;
-}
-
-#purchasesTable .purchase-ebook-id {
-    display: inline-block;
-    margin-left: 5px;
-    color: #667085;
-    white-space: nowrap;
-}
-
-@media (max-width: 600px) {
-    .purchases-table-wrap {
-        overflow-x: hidden !important;
-    }
-
-    #purchasesTable {
-        display: none;
-        min-width: 0 !important;
-        width: 100% !important;
-        table-layout: fixed;
-        font-size: 9px;
-    }
-
-    #purchasesTable th,
-    #purchasesTable td {
-        padding: 5px 2px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        vertical-align: middle;
-    }
-
-    #purchasesTable th:nth-child(1), #purchasesTable td:nth-child(1) { width: 7%; }
-    #purchasesTable th:nth-child(2), #purchasesTable td:nth-child(2) { width: 27%; }
-    #purchasesTable th:nth-child(3), #purchasesTable td:nth-child(3) { width: 19%; }
-    #purchasesTable th:nth-child(5), #purchasesTable td:nth-child(5) { width: 19%; }
-    #purchasesTable th:nth-child(8), #purchasesTable td:nth-child(8) { width: 10%; }
-    #purchasesTable th:nth-child(9), #purchasesTable td:nth-child(9) { width: 18%; }
-
-    /* Keep the most useful fields visible on a phone; other details remain on PC. */
-    #purchasesTable th:nth-child(4), #purchasesTable td:nth-child(4),
-    #purchasesTable th:nth-child(6), #purchasesTable td:nth-child(6),
-    #purchasesTable th:nth-child(7), #purchasesTable td:nth-child(7),
-    #purchasesTable th:nth-child(10), #purchasesTable td:nth-child(10),
-    #purchasesTable th:nth-child(11), #purchasesTable td:nth-child(11),
-    #purchasesTable th:nth-child(12), #purchasesTable td:nth-child(12) {
-        display: none;
-    }
-
-    #purchasesTable .purchase-ebook-title {
-        max-width: 100%;
-        font-size: 9px;
-    }
-
-    #purchasesTable .purchase-ebook-id {
-        display: none;
-    }
+@media print {
+  body * { visibility:hidden !important; }
+  #salesSection, #salesSection * { visibility:visible !important; }
+  #salesSection { display:block !important; position:absolute !important; left:0 !important; top:0 !important; width:100% !important; margin:0 !important; padding:0 !important; box-shadow:none !important; background:#fff !important; }
+  #salesSection .dashboard-back, #salesSection button, #purchaseMessage .purchase-print-btn { display:none !important; }
+  #purchasesTable { display:table !important; width:100% !important; min-width:0 !important; font-size:9px !important; }
+  .purchase-table-wrap { overflow:visible !important; }
+  .purchase-table th, .purchase-table td { display:table-cell !important; padding:4px !important; overflow-wrap:anywhere !important; }
+  .purchase-table th:nth-child(5), .purchase-table td:nth-child(5),
+  .purchase-table th:nth-child(6), .purchase-table td:nth-child(6),
+  .purchase-table th:nth-child(9), .purchase-table td:nth-child(9),
+  .purchase-table th:nth-child(10), .purchase-table td:nth-child(10),
+  .purchase-table th:nth-child(11), .purchase-table td:nth-child(11) { display:table-cell !important; }
+  @page { size:landscape; margin:8mm; }
 }
 
 </style>
@@ -1136,17 +1097,9 @@ textarea{
         Purchases load करने के लिए Refresh दबाएँ।
     </div>
 
-    <div class="purchases-table-wrap" style="margin-top:15px;">
+    <div class="purchase-table-wrap" style="margin-top:15px;">
 
-        <table
-            id="purchasesTable"
-            style="
-                width:100%;
-                border-collapse:collapse;
-                display:none;
-                min-width:0;
-            "
-        >
+        <table id="purchasesTable" class="purchase-table" style="display:none;">
 
             <thead>
 
@@ -1158,8 +1111,6 @@ textarea{
 
                     
 <th>Customer Name</th>
-
-<th>Email</th>
 
 <th>Mobile</th>
 
@@ -4217,21 +4168,20 @@ async function loadPurchases() {
 
 
                 row.innerHTML = `
-                    <td data-label="ID">${escapePurchaseHtml(purchase.id)}</td>
-                    <td data-label="Ebook">
-                        <strong class="purchase-ebook-title" title="${escapePurchaseHtml(purchase.ebook_title)}">${escapePurchaseHtml(purchase.ebook_title)}</strong>
-                        <small class="purchase-ebook-id">ID: ${escapePurchaseHtml(purchase.ebook_id)}</small>
+                    <td>${escapePurchaseHtml(purchase.id)}</td>
+                    <td>
+                        <strong>${escapePurchaseHtml(purchase.ebook_title)}</strong><br>
+                        <small>ID: ${escapePurchaseHtml(purchase.ebook_id)}</small>
                     </td>
-                    <td data-label="Customer Name">${escapePurchaseHtml(purchase.customer_name)}</td>
-                    <td data-label="Email">${escapePurchaseHtml(purchase.customer_email)}</td>
-                    <td data-label="Mobile">${escapePurchaseHtml(purchase.customer_phone)}</td>
-                    <td data-label="Order ID"><small>${escapePurchaseHtml(purchase.order_id)}</small></td>
-                    <td data-label="Payment ID"><small>${escapePurchaseHtml(purchase.payment_id)}</small></td>
-                    <td data-label="Amount">₹${escapePurchaseHtml(purchase.amount)}</td>
-                    <td data-label="Status"><strong>${escapePurchaseHtml(purchase.payment_status)}</strong></td>
-                    <td data-label="Purchased At">${formatPurchaseDate(purchase.purchased_at)}</td>
-                    <td data-label="Downloads">${escapePurchaseHtml(purchase.download_count || 0)}</td>
-                    <td data-label="Last Download">${purchase.last_download_at ? formatPurchaseDate(purchase.last_download_at) : "—"}</td>
+                    <td>${escapePurchaseHtml(purchase.customer_name || "—")}</td>
+                    <td>${escapePurchaseHtml(purchase.customer_phone || "—")}</td>
+                    <td><small>${escapePurchaseHtml(purchase.order_id || "—")}</small></td>
+                    <td><small>${escapePurchaseHtml(purchase.payment_id || "—")}</small></td>
+                    <td>₹${escapePurchaseHtml(purchase.amount)}</td>
+                    <td><strong>${escapePurchaseHtml(purchase.payment_status)}</strong></td>
+                    <td>${formatPurchaseDate(purchase.purchased_at)}</td>
+                    <td>${escapePurchaseHtml(purchase.download_count || 0)}</td>
+                    <td>${purchase.last_download_at ? formatPurchaseDate(purchase.last_download_at) : "—"}</td>
                 `;
 
 
@@ -4248,7 +4198,7 @@ async function loadPurchases() {
 
 
         message.innerHTML =
-            `✅ Total Purchases: <strong>${purchases.length}</strong>`;
+            `<div class="purchase-print-row"><span>✅ Total Purchases: <strong>${purchases.length}</strong></span><button type="button" class="purchase-print-btn" onclick="printPurchases()">🖨️ Print Purchases</button></div>`;
 
 
     }
@@ -4275,6 +4225,15 @@ async function loadPurchases() {
 // =====================================================
 // ESCAPE HTML
 // =====================================================
+
+function printPurchases() {
+    const table = document.getElementById("purchasesTable");
+    if (!table || !table.querySelector("tbody tr")) {
+        alert("पहले Refresh Purchases दबाकर purchases लोड करें।");
+        return;
+    }
+    window.print();
+}
 
 function escapePurchaseHtml(
     value
